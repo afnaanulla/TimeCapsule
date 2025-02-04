@@ -1,0 +1,13 @@
+*{
+  font-family: "Open Sans", serif;
+  overflow: hidden;
+  background-color: #20203c;
+}
+
+:host ::ng-deep .custom-snackbar {
+  background-color: #4CAF50 !important; /* Green background */
+  color: white !important; /* White text */
+  font-weight: bold !important; /* Bold text */
+  padding: 16px !important; /* Add padding */
+  border-radius: 4px !important; /* Rounded corners */
+}

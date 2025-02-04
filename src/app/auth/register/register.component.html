@@ -7,14 +7,14 @@
       <mat-card-content>
         <mat-form-field appearance="outline">
           <mat-label>Username</mat-label>
-          <input matInput formControlName="username" required>
+          <input matInput formControlName="username" required (blur)="checkUsername()">
           <mat-error *ngIf="registerForm.get('username')?.hasError('required')">Username is required</mat-error>
-          <mat-error *ngIf="registerForm.get('username')?.hasError('minlength')">Username must be at least 3 characters long</mat-error>
+          <mat-error *ngIf="registerForm.get('username')?.hasError('minlength')">Username must be at least 1 characters long</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Email</mat-label>
-          <input matInput formControlName="email" type="email" required>
+          <input matInput formControlName="email" type="email" required (blur)="checkEmail()">
           <mat-error *ngIf="registerForm.get('email')?.hasError('required')">Email is required</mat-error>
           <mat-error *ngIf="registerForm.get('email')?.hasError('email')">Please enter a valid email address</mat-error>
         </mat-form-field>
@@ -34,4 +34,5 @@
     </mat-card>
   </form>
 </div>
+
 

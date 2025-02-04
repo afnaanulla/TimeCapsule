@@ -7,7 +7,7 @@
       <mat-card-content>
         <mat-form-field appearance="outline">
           <mat-label>Username</mat-label>
-          <input matInput formControlName="username" required>
+          <input matInput formControlName="username" required (blur)="checkUsername()">
           <mat-error *ngIf="loginForm.get('username')?.hasError('required')">Username is required</mat-error>
         </mat-form-field>
 

@@ -1,42 +1,56 @@
 const express = require('express');
+const session = require('express-session');
 const path = require('path');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
-const authRoutes = require('./routes/auth');
 const bodyParser = require('body-parser');
+const MongoStore = require('connect-mongo');
 
-require('dotenv').config();
+const authRoutes = require('./routes/auth');
+const capsuleRoutes = require('./routes/capsules');
+
+dotenv.config();
 
 const app = express();
 
+const corsOptions = {
+  origin: 'http://localhost:4200',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
 app.use(bodyParser.json());
-app.use(cors({ origin: 'http://localhost:4200', methods: ['GET', 'POST'] }));
+app.use(express.urlencoded({ extended: true }));
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
+    cookie: { secure: false, httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }, // 1 day session
+  })
+);
+
 app.use(express.json());
 app.use('/auth', authRoutes);
+app.use('/api/capsules', capsuleRoutes);
+
 app.use(express.static(path.join(__dirname, 'public')));
-//content security policy
-app.use((req, res, next) => {
-  res.setHeader(
-    'Content-Security-Policy',
-    "default-src 'self'; font-src 'self' data:; script-src 'self'; style-src 'self' 'unsafe-inline';"
-  );
-  next();
-});
-// content security policy
+
 app.get('/', (req, res) => {
-  res.send('Hello from me');
-})
-app.get('/favicon.ico', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'favicon.ico'));
+  res.send('Server is running...');
 });
 
 const PORT = process.env.PORT || 2004;
 
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose
+  .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('Failed to connect to MongoDB', err));
+  .catch((err) => console.error('Failed to connect to MongoDB', err));
 
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
-
-app.set(console.log("hello from me"))

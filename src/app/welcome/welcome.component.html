@@ -1,1 +1,143 @@
-<p>welcome works!</p>
+<div class="allpage">
+  <!-- Logo Section -->
+  <div class="logo">
+    <img src="./assets/timeCapsule.png" alt="Time Capsule Logo">
+    <h1>Time Capsule</h1>
+  </div>
+
+  <!-- Toolbar with Hamburger Menu -->
+  <mat-toolbar class="header">
+    <button mat-icon-button (click)="sidenav.toggle()">
+      <mat-icon>{{ isMenuOpen ? 'menu_open' : 'menu' }}</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <!-- Sidenav -->
+  <mat-sidenav-container class="sidenavContainer">
+    <mat-sidenav #sidenav mode="over" [(opened)]="isMenuOpen" class="sidenav">
+      <mat-nav-list>
+        <mat-list-item (click)="onSidenavClick('home')">
+          <mat-icon>home</mat-icon>
+          <span class="menu-text">Home</span>
+        </mat-list-item>
+        <mat-list-item (click)="onSidenavClick('explore')">
+          <mat-icon>explore</mat-icon>
+          <span class="menu-text">Explore</span>
+        </mat-list-item>
+        <mat-list-item (click)="onSidenavClick('notifications')">
+          <mat-icon>notifications</mat-icon>
+          <span class="menu-text">Notifications</span>
+        </mat-list-item>
+        <mat-list-item (click)="onSidenavClick('profile')">
+          <mat-icon>account_circle</mat-icon>
+          <span class="menu-text">Profile</span>
+        </mat-list-item>
+        <mat-list-item (click)="onSidenavClick('create')">
+          <mat-icon>add</mat-icon>
+          <span class="menu-text">Create</span>
+        </mat-list-item>
+        <mat-list-item (click)="onSidenavClick('inventory')">
+          <mat-icon>inventory</mat-icon>
+          <span class="menu-text">My Capsules</span>
+        </mat-list-item>
+        <mat-list-item (click)="onSidenavClick('recent')">
+          <mat-icon>history</mat-icon>
+          <span class="menu-text">Recent</span>
+        </mat-list-item>
+        <div class="sidenav-bottom">
+          <mat-list-item (click)="onSidenavClick('settings')">
+            <mat-icon>settings</mat-icon>
+            <span class="menu-text">Settings</span>
+          </mat-list-item>
+        </div>
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <!-- Main Content -->
+    <mat-sidenav-content [ngClass]="{ 'sidenav-open': isMenuOpen }">
+      <div class="main-content">
+        <h2>Welcome to Time Capsule Dashboard</h2>
+
+        <!-- Search Bar -->
+        <div class="searchContainer">
+          <mat-form-field appearance="fill" class="search-bar">
+            <mat-label>Search Capsules</mat-label>
+            <input matInput (input)="onSearch($event)" placeholder="Search by title"/>
+          </mat-form-field>
+        </div>
+
+        <!-- Capsules Display Section -->
+        <div class="capsules-container">
+          <div *ngFor="let capsule of filteredCapsules" class="capsule-card">
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>{{ capsule.title }}</mat-card-title>
+                <mat-card-subtitle>{{ capsule.unlockDate | date: 'shortDate' }}</mat-card-subtitle>
+                <mat-card-title>
+                  {{ capsule.title }}
+                </mat-card-title>
+              </mat-card-header>
+
+              <mat-card-content>
+                <p>{{ capsule.content }}</p>
+                <div>
+                  <button  (click)="viewCapsule(capsule)" class="viewbtn"><mat-icon>visibility</mat-icon></button>
+                  <button  (click)="shareCapsule(capsule)" class="sharbtn"><mat-icon>share</mat-icon></button>
+                  <button (click)="deleteCapsule(capsule._id)" class="deletbtn"><mat-icon>delete</mat-icon></button>
+                  <button class="editbtn"> <mat-icon>edit</mat-icon></button>
+                  <button class="sharbtn"><mat-icon>lock</mat-icon></button>
+                  <button class="sharbtn"><mat-icon>lock_open</mat-icon></button>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+        <!-- Create Capsule Section -->
+        <div *ngIf="currentSection == 'create' ">
+          <mat-card class="create-capsule-card">
+            <mat-card-header>
+              <mat-card-title>Create a Capsule</mat-card-title>
+              <mat-card-subtitle>Preserve your memories for the future</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <form [formGroup]="capsuleForm" (ngSubmit)="createCapsule()">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Title</mat-label>
+                  <input matInput formControlName="title" placeholder="Enter title" required>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Message</mat-label>
+                  <textarea matInput formControlName="content" placeholder="Enter your message" required rows="4"></textarea>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Release Date</mat-label>
+                  <input matInput [matDatepicker]="picker" formControlName="unlockDate" placeholder="Select unlock date" required>
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+
+                <!-- <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Upload Images</mat-label>
+                  <input matInput type="file" (change)="onFileChange($event)" accept="image/*">
+                </mat-form-field> -->
+
+
+                <!-- Privacy Selection -->
+                <div class="privacyOptions">
+                  <label>Privacy:</label>
+                  <mat-radio-group formControlName="type">
+                    <mat-radio-button value="public">Public</mat-radio-button>
+                    <mat-radio-button value="private">Private</mat-radio-button>
+                  </mat-radio-group>
+                </div>
+                <button mat-raised-button color="primary" type="submit" [disabled]="capsuleForm.invalid">Create Capsule</button>
+              </form>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

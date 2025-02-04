@@ -1,0 +1,80 @@
+<!-- <div class="time-capsule-container">
+  <mat-card class="create-capsule-card">
+    <mat-card-header>
+      <mat-card-title>Create a Time Capsule</mat-card-title>
+      <mat-card-subtitle>Preserve your memories for the future</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="capsuleForm" (ngSubmit)="createCapsule()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Title</mat-label>
+          <input matInput formControlName="title" placeholder="Enter title" required>
+          <mat-error *ngIf="capsuleForm.get('title')?.hasError('required')">Title is required</mat-error>
+          <mat-error *ngIf="capsuleForm.get('title')?.hasError('maxlength')">Title must be less than 50 characters</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Message</mat-label>
+          <textarea matInput formControlName="content" placeholder="Enter your message" required rows="4"></textarea>
+
+          <mat-error *ngIf="capsuleForm.get('content')?.hasError('required')">Message is required</mat-error>
+          <mat-error *ngIf="capsuleForm.get('content')?.hasError('maxlength')">Message must be less than 500 characters</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Release Date</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="unlockDate" placeholder="Select unlock date" required>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="capsuleForm.get('unlockDate')?.hasError('required')">Release Date is required</mat-error>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="capsuleForm.invalid" class="submit-button">
+          Create Time Capsule
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="capsules-list-card">
+    <mat-card-header>
+      <mat-card-title>Your Time Capsules</mat-card-title>
+      <mat-card-subtitle>Journey through your memories</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="capsules" class="capsules-table">
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef> Title </th>
+          <td mat-cell *matCellDef="let capsule"> {{capsule.title}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="unlockDate">
+          <th mat-header-cell *matHeaderCellDef> Release Date </th>
+          <td mat-cell *matCellDef="let capsule"> {{capsule.unlockDate | date:'longDate'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef> Actions </th>
+          <td mat-cell *matCellDef="let capsule; let i = index">
+            <button mat-icon-button color="warn" aria-label="Delete capsule">
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</div>
+ -->
+
+
+
+  <!-- Profile Section -->
+  <!-- <div class="profileSection">
+    <div class="profileimage">
+      <img src="./assets/profilepic.jpg" loading="lazy" alt="profile picture">
+    </div>
+    <h2>Afnaan</h2>
+  </div> -->

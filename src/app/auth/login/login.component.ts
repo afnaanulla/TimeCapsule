@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
@@ -10,6 +10,9 @@ import { MatButtonModule} from '@angular/material/button';
 import { trigger, transition,style,animate } from '@angular/animations';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { RegisterComponent } from '../register/register.component';
 
 @Component({
   selector: 'app-login',
@@ -20,10 +23,10 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./login.component.css'],
   animations: []
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {}
+  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -37,18 +40,28 @@ export class LoginComponent {
   getCode(): void {
     const username = this.loginForm.get('username')?.value;
     if(!username) {
-      alert('Please enter your username to get code ');
+      this.snackBar.open('Please enter your username to get the code', 'Close', {
+        duration: 5000,
+        panelClass: ['snackbar-error'],
+      });
       return;
     }
 
     //post request to send code
 
-    this.http.post('http://localhost:2004/auth/login', { username }).subscribe(
+    this.http.post('http://localhost:2004/auth/login', { username }, { withCredentials: true}).subscribe(
       (response) => {
-        alert("Code sent to your mail ");
+        this.snackBar.open('Code sent to your email', 'Close', {
+          duration: 5000,
+          panelClass: ['snackbar-success'],
+        });
       },
       (error) => {
-        alert(error.error.message || 'Failed to send code ');
+        this.snackBar.open(error.error.message || 'Failed to send code', 'Close', {
+          duration: 5000,
+          panelClass: ['snackbar-error'],
+        });
+
       }
     );
   }
@@ -59,16 +72,37 @@ export class LoginComponent {
     if(this.loginForm.valid) {
       this.http.post('http://localhost:2004/auth/verify-code', this.loginForm.value).subscribe(
         (response) => {
-          alert('Login successful ');
+          this.snackBar.open('Login successful!', 'Close', {
+            duration: 5000,
+            panelClass: ['snackbar-success'],
+          });
           this.router.navigate(['/welcome']);
         },
         (error) => {
-          alert('Login failed' + error.error.message || 'Invalid username ');
+          this.snackBar.open(error.error.message || 'Invalid username or code', 'Close', {
+            duration: 5000,
+            panelClass: ['snackbar-error'],
+          });
         }
       );
     }
     else {
-      alert('Form is invalid ');
+      this.snackBar.open('Form is invalid', 'Close', {
+        duration: 5000,
+        panelClass: ['snackbar-warning'],
+      });
+    }
+  }
+  checkUsername(): void {
+    const usernameControl = this.loginForm.get('username');
+    usernameControl?.markAsTouched();
+    if (usernameControl?.value === '') {
+      this.snackBar.open('Username is required', 'Close', {
+        duration: 5000,
+        panelClass: ['snackbar-error'],
+        verticalPosition: 'top',
+        horizontalPosition: 'left',
+      });
     }
   }
 }
