@@ -73,27 +73,30 @@
               <mat-card-header>
                 <mat-card-title>{{ capsule.title }}</mat-card-title>
                 <mat-card-subtitle>{{ capsule.unlockDate | date: 'shortDate' }}</mat-card-subtitle>
-                <mat-card-title>
-                  {{ capsule.title }}
-                </mat-card-title>
               </mat-card-header>
 
               <mat-card-content>
-                <p>{{ capsule.content }}</p>
+                <div *ngIf="capsule.type !== 'private' || passwordCorrect(capsule)">
+                  {{ capsule.content }}
+                </div>
+                <div *ngIf="capsule.type === 'private' && !passwordCorrect(capsule)">
+                  <mat-icon>lock</mat-icon>
+                  <p>This capsule is private. Enter password to unlock.</p>
+                </div>
+
                 <div>
-                  <button  (click)="viewCapsule(capsule)" class="viewbtn"><mat-icon>visibility</mat-icon></button>
-                  <button  (click)="shareCapsule(capsule)" class="sharbtn"><mat-icon>share</mat-icon></button>
+                  <button (click)="viewCapsule(capsule)" class="viewbtn"><mat-icon>visibility</mat-icon></button>
+                  <button (click)="shareCapsule(capsule)" class="sharbtn"><mat-icon>share</mat-icon></button>
                   <button (click)="deleteCapsule(capsule._id)" class="deletbtn"><mat-icon>delete</mat-icon></button>
-                  <button class="editbtn"> <mat-icon>edit</mat-icon></button>
-                  <button class="sharbtn"><mat-icon>lock</mat-icon></button>
-                  <button class="sharbtn"><mat-icon>lock_open</mat-icon></button>
+                  <button class="editbtn"><mat-icon>edit</mat-icon></button>
                 </div>
               </mat-card-content>
             </mat-card>
           </div>
         </div>
+
         <!-- Create Capsule Section -->
-        <div *ngIf="currentSection == 'create' ">
+        <div *ngIf="currentSection == 'create'">
           <mat-card class="create-capsule-card">
             <mat-card-header>
               <mat-card-title>Create a Capsule</mat-card-title>
@@ -107,8 +110,8 @@
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="full-width">
-                  <mat-label>Message</mat-label>
-                  <textarea matInput formControlName="content" placeholder="Enter your message" required rows="4"></textarea>
+                  <mat-label>Content</mat-label>
+                  <textarea matInput formControlName="content" placeholder="Enter your message" required rows="1" class="txtar"></textarea>
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="full-width">
@@ -118,10 +121,15 @@
                   <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
 
-                <!-- <mat-form-field appearance="outline" class="full-width">
-                  <mat-label>Upload Images</mat-label>
-                  <input matInput type="file" (change)="onFileChange($event)" accept="image/*">
-                </mat-form-field> -->
+                <!-- image Section -->
+                  <mat-label>Upload Image</mat-label>
+                  <input type="file"  (change)="onImageChange($event)" accept="image/*">
+
+
+                <div *ngIf="imagePreviewurl">
+                  <h4>Preview:  </h4>
+                  <img [src]="imagePreviewurl" alt="image preview" style="max-width: 200px; max-height:200px"/>
+                </div>
 
 
                 <!-- Privacy Selection -->
@@ -132,6 +140,22 @@
                     <mat-radio-button value="private">Private</mat-radio-button>
                   </mat-radio-group>
                 </div>
+
+                <mat-form-field appearance="outline" class="full-width" *ngIf="capsuleForm.value.type === 'private'">
+                  <mat-label>Password</mat-label>
+                  <input matInput formControlName="password" type="password" placeholder="Enter password" required>
+                </mat-form-field>
+
+                <!-- Password Dialog -->
+                <mat-dialog-content *ngIf="isPasswordDialogVisible">
+                  <h2>Enter Password</h2>
+                  <mat-form-field appearance="fill">
+                    <mat-label>Password</mat-label>
+                    <input matInput [(ngModel)]="enteredPassword" type="password" placeholder="Enter password">
+                  </mat-form-field>
+                  <button mat-raised-button color="primary" (click)="validatePassword('capsule')">Submit</button>
+                  <button mat-raised-button color="warn" (click)="isPasswordDialogVisible = false">Cancel</button>
+                </mat-dialog-content>
                 <button mat-raised-button color="primary" type="submit" [disabled]="capsuleForm.invalid">Create Capsule</button>
               </form>
             </mat-card-content>

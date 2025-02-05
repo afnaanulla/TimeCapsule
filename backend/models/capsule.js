@@ -13,7 +13,7 @@ const capsuleSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  content: {  // Ensure this is 'content', not 'textContent'
+  content: { 
     type: mongoose.Schema.Types.Mixed,
     required: true,
   },
@@ -22,6 +22,7 @@ const capsuleSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
+
 });
 
 const Capsule = mongoose.model('Capsule', capsuleSchema);

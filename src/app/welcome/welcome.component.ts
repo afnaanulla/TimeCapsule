@@ -66,7 +66,8 @@ export class WelcomeComponent implements OnInit {
   isPasswordDialogVisible = false;
   enteredPassword: string = '';
   selectedCapsule: any = null;
-  selectedFiles: FileList | null = null;
+  imageUrls: string[] = [];
+  imagePreviewurl: string | ArrayBuffer | null = null;
 
   constructor(private fb: FormBuilder, private http: HttpClient, private dialog: MatDialog) {}
 
@@ -75,9 +76,22 @@ export class WelcomeComponent implements OnInit {
     this.currentSection = section;
   }
 
-  onFileChange(event: any): void {
-    this.selectedFiles = event.target.files;
+  passwordCorrect(capsule: any): boolean {
+    if (capsule.type === 'private') {
+      return this.enteredPassword === capsule.password;
+    }
+    return true; // For public capsules, password check isn't needed
   }
+
+  validatePassword(capsule: any): void {
+    if (this.passwordCorrect(capsule)) {
+      this.enteredPassword = ''; // Clear password field on success
+      // Logic to open the capsule content goes here (e.g., display content)
+    } else {
+      alert('Incorrect password! Try again.');
+    }
+  }
+
   ngOnInit(): void {
     this.capsuleForm = this.fb.group({
       title: ['', [Validators.required]],
@@ -85,32 +99,62 @@ export class WelcomeComponent implements OnInit {
       unlockDate: ['', [Validators.required]],  // Should this be `unlockDate` instead of `releaseDate`?
       type: ['public', [Validators.required]],
     });
+
+    this.capsuleForm.get('type')?.valueChanges.subscribe((type) => {
+      if (type === 'private') {
+        this.capsuleForm.addControl('password', this.fb.control('', Validators.required));
+      } else {
+        this.capsuleForm.removeControl('password');
+      }
+    });
+
     this.getCapsule();
+  }
+
+
+  onImageChange(event: any): void {
+    const file = event.target.files[0];
+    if(file) {
+      this.imagePreviewurl = URL.createObjectURL(file);
+      this.uploadImage(file);
+    }
+  }
+
+  uploadImage(file: File): void {
+    const formData = new FormData();
+    formData.append('image', file, file.name);
+
+    this.http.post('http://localhost:2004/api/uploads', formData).subscribe(
+      (response: any) => {
+        this.imageUrls.push(response.imgUrl); // Store the uploaded image URL
+        alert('Image uploaded successfully!');
+      },
+      (error) => {
+        alert('Failed to upload image: ' + error.error.message);
+      }
+    );
   }
 
   createCapsule(): void {
     if (this.capsuleForm.valid) {
-      const formData: {
-        title: string;
-        description: string;
-        unlockDate: string;
-        content: string;
-        type: string;
-        password?: String,
-      } = {
+      const formData: any = {
         title: this.capsuleForm.value.title,
         description: this.capsuleForm.value.content,
         unlockDate: this.capsuleForm.value.unlockDate,
         content: this.capsuleForm.value.content,
         type: this.capsuleForm.value.type,
-        password: this.capsuleForm.value.type === 'private' ? this.enteredPassword: '',
+        password: this.capsuleForm.value.type === 'private' ? this.capsuleForm.value.password : '',
+        images: this.imageUrls, // Add the image URLs to the form data
       };
+
       this.http.post('http://localhost:2004/api/capsules/create', formData, {
         withCredentials: true,
       }).subscribe(
         (response: any) => {
           alert('Capsule created successfully!');
           this.capsuleForm.reset();
+          this.imageUrls = [];
+          this.imagePreviewurl = null; // Reset the image URLs after creating the capsule
         },
         (error) => {
           alert('Failed to create capsule: ' + error.error.message);
@@ -120,6 +164,7 @@ export class WelcomeComponent implements OnInit {
       alert('Form is invalid');
     }
   }
+    // Upload image and get its URL
 
 
   getCapsule(): void {
@@ -157,22 +202,6 @@ export class WelcomeComponent implements OnInit {
 
     alert('Viewing capsule with id: ' + capsule);
   }
-
-  validatePassword(): void {
-    if(this.enteredPassword == this.selectedCapsule.password) {
-      alert('Password correct viewing private capsule ');
-      this.selectedCapsule.unlocked = true;
-
-      this.filteredCapsules = this.filteredCapsules.map((capsule) =>
-        capsule === this.selectedCapsule ?{ ...capsule, unlocked: true} :capsule
-      );
-      this.isPasswordDialogVisible = false;
-    }
-    else {
-      alert('Incorrect password ');
-    }
-  }
-
   shareCapsule(capsule: any): void {
     if(capsule.type === 'private' && !capsule.unlocked) {
       alert('private capsule required password validation before sharing ');

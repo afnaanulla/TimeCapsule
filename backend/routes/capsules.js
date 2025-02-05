@@ -1,9 +1,22 @@
 const express = require('express');
+const multer = require('multer');
+const path = require('path');
 const router = express.Router();
 const { ObjectId } = require('mongoose').Types;
 const Capsule = require('../models/capsule');
 
-// Middleware to verify session (adjust if using JWT instead of sessions)
+const storage = multer.diskStorage({
+  destination: (req,file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage: storage });
+
+
 const verifySession = (req, res, next) => {
   console.log('Session data: ', req.session);
   if (!req.session || !req.session.user) {
@@ -12,17 +25,33 @@ const verifySession = (req, res, next) => {
   next();
 };
 
-// 🟢 Route to create a new capsule
+router.post('/uploads', upload.single('image'), (req, res) => {
+  if(req.file) {
+    const imgUlr = `http://localhost:2004/uploads/${req.file.filename}`;
+    res.json({ imgUlr });
+  }
+  else {
+    res.status(400).send('No files uploaded ');
+  }
+});
+
+// Route to create a new capsule
 router.post('/create', verifySession, async (req, res) => {
   try {
-    const { title, description, unlockDate, content } = req.body;
+
+    const { title, description, unlockDate, content, images } = req.body;
     const userId = req.session.user._id;
 
+    // const { imgUlr } = response;
+    if(images && images.length > 0) {
+      console.log('Image Url received: ',images);
+    }
     const newCapsule = new Capsule({
       title,
       description,
       unlockDate,
       content,
+      images,
       user: userId,
     });
 
@@ -34,7 +63,7 @@ router.post('/create', verifySession, async (req, res) => {
   }
 });
 
-// 🟢 Route to get all capsules for the logged-in user
+// Route to get all capsules for the logged-in user
 router.get('/', verifySession, async (req, res) => {
   try {
     const userId = req.session.user._id;
@@ -52,7 +81,7 @@ router.get('/', verifySession, async (req, res) => {
   }
 });
 
-// 🟢 Route to get a single capsule by ID
+// Route to get a single capsule by ID
 router.get('/:id', verifySession, async (req, res) => {
   const { id } = req.params;
 
@@ -73,7 +102,7 @@ router.get('/:id', verifySession, async (req, res) => {
   }
 });
 
-//route to delete capsule
+//Route to delete capsule
 
 router.delete('/:id', verifySession, async(req, res) => {
   const { id } = req.params;

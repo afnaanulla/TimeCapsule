@@ -4,7 +4,7 @@ const User = require('../models/user');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 
-// Register User
+// register user
 router.post('/register', async (req, res) => {
   try {
     const { username, email } = req.body;
@@ -26,7 +26,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// Login User (Send Verification Code)
+// login user (send verification code)
 router.post('/login', async (req, res) => {
   try {
     const { username } = req.body;
@@ -71,7 +71,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Verify Code
+// verify code
 router.post('/verify-code', async (req, res) => {
   try {
     const { username, code } = req.body;

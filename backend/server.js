@@ -25,6 +25,7 @@ app.use(cors(corsOptions));
 
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
+app.use('/uploads', express.static('uploads'));
 
 app.use(
   session({
@@ -39,6 +40,7 @@ app.use(
 app.use(express.json());
 app.use('/auth', authRoutes);
 app.use('/api/capsules', capsuleRoutes);
+app.use('/api', capsuleRoutes);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -46,6 +48,13 @@ app.get('/', (req, res) => {
   res.send('Server is running...');
 });
 
+// serve static files from the 'dist' folder where the angular app is present
+app.use(express.static(path.join(__dirname, 'dist', 'your-angular-app-name')));
+
+// catch all route to send all requests to Angular's index.html (for csr)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'your-angular-app-name', 'index.html'));
+});
 const PORT = process.env.PORT || 2004;
 
 mongoose

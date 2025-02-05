@@ -185,6 +185,7 @@ mat-card-subtitle {
 mat-card-content p {
   font-size: 1rem;
   color: #444;
+  font-family: 'Inter', sans-serif;
 }
 
 .privacyIcon {
@@ -204,9 +205,9 @@ mat-card-content button:last-child {
 
 
 .deletbtn {
-  border: none;  
-  padding: 0;  
-  cursor: pointer; 
+  border: none;
+  padding: 0;
+  cursor: pointer;
   position: absolute;
   top: 10px;
   right: 10px;
@@ -217,4 +218,14 @@ mat-card-content button:last-child {
   padding: 0;
   cursor: pointer;
 
+}
+.capsulecontent {
+  max-width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap; /* Keeps line breaks */
+  text-overflow: ellipsis; /* Shows '...' for long text */
+  overflow: hidden;
+  color: #000;
+  font-family: 'Inter', sans-serif;
 }
