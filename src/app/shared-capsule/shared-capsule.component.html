@@ -1,0 +1,12 @@
+<div class="capsule-container" *ngIf="capsule">
+  <h2>{{ capsule.title }}</h2>
+  <p>{{ capsule.content }}</p>
+
+  <div class="image-gallery" *ngIf="capsule.images && capsule.images.length">
+    <img *ngFor="let img of capsule.images" [src]="'http://localhost:2004' + img" alt="Capsule Image" />
+  </div>
+</div>
+
+<div class="error-message" *ngIf="!capsule">
+  <p>Capsule not found or an error occurred.</p>
+</div>

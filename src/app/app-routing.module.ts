@@ -9,6 +9,7 @@ import { AboutComponent } from './about/about.component';
 import { ContactComponent } from './contact/contact.component';
 import { PrivacyComponent } from './privacy/privacy.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { SharedCapsuleComponent } from './shared-capsule/shared-capsule.component';
 
 
 export const routes: Routes = [
@@ -20,7 +21,9 @@ export const routes: Routes = [
   { path: 'terms', component: TermsComponent },
   { path: 'contact', component: ContactComponent },
   { path: 'privacy', component: PrivacyComponent },
+  { path: 'shared/:id', component: SharedCapsuleComponent },
   { path: '**', component: NotFoundComponent},
+
 
 ];
 

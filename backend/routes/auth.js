@@ -90,4 +90,19 @@ router.post('/verify-code', async (req, res) => {
   }
 });
 
+router.post('/logout', async(req, res) => {
+  try{
+    req.session.destroy((err) => {
+      if(err) {
+        return res.status(500).json({ message: 'Error destroying session '});
+      }
+      res.status(200).json({ message: 'Logout successfully '});
+    });
+  }
+  catch(err) {
+    console.error('Logout error ', err);
+    res.status(500).json({ message: 'Internal server error '});
+  }
+});
+
 module.exports = router;

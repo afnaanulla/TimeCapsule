@@ -4,6 +4,9 @@ const path = require('path');
 const router = express.Router();
 const { ObjectId } = require('mongoose').Types;
 const Capsule = require('../models/capsule');
+const { v4: uuidv4 } = require('uuid');
+
+// const sharableLink = `${req.protocol}://${req.get('host')}/api/capsules/share/${uuidv4()}`;
 
 const storage = multer.diskStorage({
   destination: (req,file, cb) => {
@@ -25,41 +28,46 @@ const verifySession = (req, res, next) => {
   next();
 };
 
-router.post('/uploads', upload.single('image'), (req, res) => {
-  if(req.file) {
-    const imgUlr = `http://localhost:2004/uploads/${req.file.filename}`;
-    res.json({ imgUlr });
+router.post('/upload', upload.array("images", 5), (req, res) => {
+  if (req.files.length > 0) {
+    const imageUrls = req.files.map((file) => `/uploads/${file.filename}`);
+    res.json({ imageUrls });
+  } else {
+    res.status(400).send("No files uploaded");
   }
-  else {
-    res.status(400).send('No files uploaded ');
-  }
-});
+})
 
 // Route to create a new capsule
 router.post('/create', verifySession, async (req, res) => {
   try {
-
-    const { title, description, unlockDate, content, images } = req.body;
+    const { title, description, unlockDate, content, images, isOneTimeView } = req.body;
     const userId = req.session.user._id;
+    const sharableId = uuidv4();
 
-    // const { imgUlr } = response;
-    if(images && images.length > 0) {
-      console.log('Image Url received: ',images);
-    }
+    console.log("Received Images:", images);
+    // Extract uploaded image paths
+    const imageArray = Array.isArray(images) ? images : [];
+
+
+
+    console.log("Image URLs received:", images);
+
     const newCapsule = new Capsule({
       title,
       description,
       unlockDate,
       content,
-      images,
+      images: imageArray, // Save images array
       user: userId,
+      isOneTimeView,
+      sharableLink: sharableId,
     });
 
     const savedCapsule = await newCapsule.save();
     res.status(201).json(savedCapsule);
   } catch (error) {
-    console.error('Error creating capsule:', error);
-    res.status(500).json({ message: 'Failed to create capsule', error: error.message });
+    console.error("Error creating capsule:", error);
+    res.status(500).json({ message: "Failed to create capsule", error: error.message });
   }
 });
 
@@ -95,6 +103,15 @@ router.get('/:id', verifySession, async (req, res) => {
       return res.status(404).json({ message: 'Capsule not found' });
     }
 
+    if(capsule.isOneTimeView && capsule.viewed) {
+      return res.status(403).json({ message: 'This capsule is already viewed '});
+    }
+
+    if(capsule.isOneTimeView) {
+      capsule.viewed = true;
+      await capsule.save();
+    }
+
     res.status(200).json(capsule);
   } catch (error) {
     console.error('Error fetching capsule:', error);
@@ -121,6 +138,47 @@ router.delete('/:id', verifySession, async(req, res) => {
   catch(error) {
     console.error('Error deleting capsule ', error);
     return res.status(500).json({ message: 'Internal server error '});
+  }
+});
+
+router.get('/share/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log('Requested id ', id);
+    const capsule = await Capsule.findOne({ sharableLink: id });
+
+
+
+    if (!capsule) {
+      return res.status(404).json({ message: 'Capsule not found' });
+    }
+
+    res.status(200).json({
+      title: capsule.title,
+      description: capsule.description,
+      unlockDate: capsule.unlockDate,
+      content: capsule.content,
+      images: capsule.images
+    });
+
+  } catch (error) {
+    console.error('Error fetching shared capsule:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+router.put('/capsules/:id', async (req, res) => {
+  try {
+      const { id } = req.params;
+      const updatedCapsule = await Capsule.findByIdAndUpdate(id, req.body, { new: true });
+
+      if (!updatedCapsule) {
+          return res.status(404).json({ message: 'Capsule not found' });
+      }
+
+      res.json(updatedCapsule);
+  } catch (error) {
+      res.status(500).json({ message: 'Error updating capsule', error });
   }
 });
 

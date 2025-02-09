@@ -1,0 +1,33 @@
+<ngx-beautify-cursor></ngx-beautify-cursor>
+<form [formGroup]="editCapsuleForm" (ngSubmit)="updateCapsule()">
+  <mat-form-field appearance="outline">
+    <mat-label>Title</mat-label>
+    <input matInput formControlName="title">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Content</mat-label>
+    <textarea matInput formControlName="content"></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Unlock Date</mat-label>
+    <input matInput type="date" formControlName="unlockDate">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Type</mat-label>
+    <mat-select formControlName="type">
+      <mat-option value="public">Public</mat-option>
+      <mat-option value="private">Private</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Password</mat-label>
+    <input matInput type="password" formControlName="password">
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" type="submit">Update Capsule</button>
+  <button mat-button type="button" (click)="closeDialog()">Cancel</button>
+</form>

@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { HomeComponent } from './home/home.component';
 import {NgxBeautifyCursorModule} from 'ngx-beautify-cursor';
 
@@ -21,6 +21,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSelectModule } from '@angular/material/select';
 
 
 //primeng
@@ -33,6 +34,8 @@ import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { AppRoutingModule } from './app-routing.module';
+import { SharedCapsuleComponent } from './shared-capsule/shared-capsule.component';
+import { EditCapsuleComponent } from './edit-capsule/edit-capsule.component';
 
 @NgModule({
   declarations: [],
@@ -61,6 +64,10 @@ import { AppRoutingModule } from './app-routing.module';
     MatSnackBarModule,
     AppRoutingModule,
     NgxBeautifyCursorModule,
+    CommonModule,
+    SharedCapsuleComponent,
+    EditCapsuleComponent,
+    MatSelectModule
   ],
   providers: [DatePipe],
   bootstrap: [],

@@ -20,18 +20,6 @@
           <mat-icon>home</mat-icon>
           <span class="menu-text">Home</span>
         </mat-list-item>
-        <mat-list-item (click)="onSidenavClick('explore')">
-          <mat-icon>explore</mat-icon>
-          <span class="menu-text">Explore</span>
-        </mat-list-item>
-        <mat-list-item (click)="onSidenavClick('notifications')">
-          <mat-icon>notifications</mat-icon>
-          <span class="menu-text">Notifications</span>
-        </mat-list-item>
-        <mat-list-item (click)="onSidenavClick('profile')">
-          <mat-icon>account_circle</mat-icon>
-          <span class="menu-text">Profile</span>
-        </mat-list-item>
         <mat-list-item (click)="onSidenavClick('create')">
           <mat-icon>add</mat-icon>
           <span class="menu-text">Create</span>
@@ -39,10 +27,6 @@
         <mat-list-item (click)="onSidenavClick('inventory')">
           <mat-icon>inventory</mat-icon>
           <span class="menu-text">My Capsules</span>
-        </mat-list-item>
-        <mat-list-item (click)="onSidenavClick('recent')">
-          <mat-icon>history</mat-icon>
-          <span class="menu-text">Recent</span>
         </mat-list-item>
         <div class="sidenav-bottom">
           <mat-list-item (click)="onSidenavClick('settings')">
@@ -56,10 +40,36 @@
     <!-- Main Content -->
     <mat-sidenav-content [ngClass]="{ 'sidenav-open': isMenuOpen }">
       <div class="main-content">
-        <h2>Welcome to Time Capsule Dashboard</h2>
+        <h2 class="homeGreetings">{{greetings}}</h2>
+
+        <!-- home section -->
+        <div *ngIf="currentSection === 'home'">
+          <div class="hero">
+            <h1 class="heroh1">Preserve Your Memories for the future</h1>
+            <p class="herop">Create a digital time capsule with text, images, and videos to unlock in the future.</p>
+          </div>
+          <div class="works">
+            <h2>How it works</h2>
+            <div class="steps">
+              <div class="step">
+                <h3>1. Create</h3>
+                <p>Add, text, images, and videos to your capsule.</p>
+              </div>
+              <div class="step">
+                <h3>2. Set Unlock Date</h3>
+                <p>Choose when your capsule will open.</p>
+              </div>
+              <div class="step">
+                <h3>3. Share or Save</h3>
+                <p>Keep it private or share it with loved ones.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
 
         <!-- Search Bar -->
-        <div class="searchContainer">
+        <div class="searchContainer" *ngIf="currentSection === 'inventory'">
           <mat-form-field appearance="fill" class="search-bar">
             <mat-label>Search Capsules</mat-label>
             <input matInput (input)="onSearch($event)" placeholder="Search by title"/>
@@ -67,7 +77,7 @@
         </div>
 
         <!-- Capsules Display Section -->
-        <div class="capsules-container">
+        <div class="capsules-container" *ngIf="currentSection === 'dashboard' || currentSection === 'inventory'">
           <div *ngFor="let capsule of filteredCapsules" class="capsule-card">
             <mat-card>
               <mat-card-header>
@@ -76,8 +86,8 @@
               </mat-card-header>
 
               <mat-card-content>
-                <div *ngIf="capsule.type !== 'private' || passwordCorrect(capsule)">
-                  {{ capsule.content }}
+                <div *ngIf="capsule.type !== 'private' || passwordCorrect(capsule)" style="color: blue;">
+                 <p class="showoneline" style="color: blue;">{{ capsule.content }}</p>
                 </div>
                 <div *ngIf="capsule.type === 'private' && !passwordCorrect(capsule)">
                   <mat-icon>lock</mat-icon>
@@ -88,15 +98,39 @@
                   <button (click)="viewCapsule(capsule)" class="viewbtn"><mat-icon>visibility</mat-icon></button>
                   <button (click)="shareCapsule(capsule)" class="sharbtn"><mat-icon>share</mat-icon></button>
                   <button (click)="deleteCapsule(capsule._id)" class="deletbtn"><mat-icon>delete</mat-icon></button>
-                  <button class="editbtn"><mat-icon>edit</mat-icon></button>
+                  <button (click)="editCapsule(capsule)" class="editbtn"><mat-icon>edit</mat-icon></button>
                 </div>
               </mat-card-content>
             </mat-card>
           </div>
         </div>
 
+        <div class="capsuleModel" *ngIf="selectedCapsule">
+          <div class="modelContent">
+            <h2>{{ selectedCapsule.title }}</h2>
+            <p> {{ selectedCapsule.content }}</p>
+
+            <!-- Display Uploaded Images -->
+            <div *ngIf="imageUrls.length > 0">
+              <h3>Newly Uploaded Images:</h3>
+              <div class="image-gallery">
+                <img *ngFor="let img of imageUrls" [src]="img" class="capsule-image" alt="Uploaded Image" width="150" height="100">
+              </div>
+            </div>
+
+            <!-- Display Capsule Images (if any exist) -->
+            <div *ngIf="selectedCapsule.images && selectedCapsule.images.length > 0">
+              <h3>Attached Images:</h3>
+              <div class="image-gallery">
+                <img *ngFor="let img of selectedCapsule.images" [src]="'http://localhost:2004' + img" class="capsule-image" alt="Capsule Image">
+              </div>
+            </div>
+
+            <button (click)="closeModel()"><mat-icon>close</mat-icon></button>
+          </div>
+        </div>
         <!-- Create Capsule Section -->
-        <div *ngIf="currentSection == 'create'">
+        <div *ngIf="currentSection === 'create'">
           <mat-card class="create-capsule-card">
             <mat-card-header>
               <mat-card-title>Create a Capsule</mat-card-title>
@@ -122,12 +156,12 @@
                 </mat-form-field>
 
                 <!-- image Section -->
-                  <mat-label>Upload Image</mat-label>
-                  <input type="file"  (change)="onImageChange($event)" accept="image/*">
+                  <mat-label>Upload Image Drag your items here </mat-label>
+                  <input type="file" (change)="onImageChange($event)" accept="image/*">
 
 
                 <div *ngIf="imagePreviewurl">
-                  <h4>Preview:  </h4>
+                  <h4>Preview: you can add maximum 5</h4>
                   <img [src]="imagePreviewurl" alt="image preview" style="max-width: 200px; max-height:200px"/>
                 </div>
 
@@ -161,7 +195,17 @@
             </mat-card-content>
           </mat-card>
         </div>
+
+        <div *ngIf="currentSection === 'settings'">
+          <mat-list-item (click)="logout()" class="logg">
+            <mat-icon>exit_to_app</mat-icon>
+            <span class="mt">Logout</span>
+          </mat-list-item>
+        </div>
       </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
+
+
 </div>
+

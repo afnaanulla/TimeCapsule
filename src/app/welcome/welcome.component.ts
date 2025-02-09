@@ -5,6 +5,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+
 
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -21,8 +23,11 @@ import { MatListModule } from '@angular/material/list';
 import { MatDialogModule } from '@angular/material/dialog';
 import {MatRadioModule} from '@angular/material/radio';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSelectModule } from '@angular/material/select';
 
-import { debounceTime } from 'rxjs/operators';
+import { EditCapsuleComponent } from '../edit-capsule/edit-capsule.component';
+
+import { debounceTime, min } from 'rxjs/operators';
 
 @Component({
   selector: 'app-welcome',
@@ -46,6 +51,7 @@ import { debounceTime } from 'rxjs/operators';
     MatButtonModule,
     MatListModule,
     MatDialogModule,
+    MatSelectModule
 
 
 
@@ -56,8 +62,9 @@ import { debounceTime } from 'rxjs/operators';
 
 })
 export class WelcomeComponent implements OnInit {
+  username: String = '';
   capsuleForm!: FormGroup;
-
+  greetings: String = '';
   capsules: any[] = [];
   displayedColumns: String[] = ['title', 'unlockDate'];
   isMenuOpen = false;
@@ -68,25 +75,37 @@ export class WelcomeComponent implements OnInit {
   selectedCapsule: any = null;
   imageUrls: string[] = [];
   imagePreviewurl: string | ArrayBuffer | null = null;
+  selectedSharedCapsule: any = null;
+  currentTheme: string = 'default';
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private dialog: MatDialog) {}
+  constructor(private fb: FormBuilder, private http: HttpClient, private dialog: MatDialog, private router: Router) {}
 
+
+  closeModel() {
+    this.selectedCapsule = null
+  }
   onSidenavClick(section: string): void{
     this.isMenuOpen = false;
     this.currentSection = section;
+
+    if(section === 'inventory') {
+      this.getCapsule();
+    }
+    if(section === 'dashboard') {
+      this.getCapsule();
+    }
   }
 
   passwordCorrect(capsule: any): boolean {
     if (capsule.type === 'private') {
       return this.enteredPassword === capsule.password;
     }
-    return true; // For public capsules, password check isn't needed
+    return true;
   }
 
   validatePassword(capsule: any): void {
     if (this.passwordCorrect(capsule)) {
-      this.enteredPassword = ''; // Clear password field on success
-      // Logic to open the capsule content goes here (e.g., display content)
+      this.enteredPassword = '';
     } else {
       alert('Incorrect password! Try again.');
     }
@@ -95,10 +114,26 @@ export class WelcomeComponent implements OnInit {
   ngOnInit(): void {
     this.capsuleForm = this.fb.group({
       title: ['', [Validators.required]],
-      content: ['', [Validators.required]],  // Should this be `content` instead of `message`?
-      unlockDate: ['', [Validators.required]],  // Should this be `unlockDate` instead of `releaseDate`?
+      content: ['', [Validators.required]],
+      unlockDate: ['', [Validators.required]],
       type: ['public', [Validators.required]],
+      // oneTimeView: [false],
     });
+
+    const myDate = new Date();
+    const hrs = myDate.getHours();
+    const mins = myDate.getMinutes();
+
+    if(hrs === 0 || (hrs >= 0 && hrs < 5) || (hrs === 5 && mins < 30)) {
+      this.greetings = 'Good Evening ';
+    }
+    else if ((hrs === 5 && mins >= 30) || (hrs > 5 && hrs < 12)) {
+      this.greetings = 'Good Morning';
+    } else if ((hrs === 12) || (hrs > 12 && hrs < 18) || (hrs === 17 && mins < 60)) {
+      this.greetings = 'Good Afternoon';
+    } else {
+      this.greetings = 'Good Evening';
+    }
 
     this.capsuleForm.get('type')?.valueChanges.subscribe((type) => {
       if (type === 'private') {
@@ -107,33 +142,50 @@ export class WelcomeComponent implements OnInit {
         this.capsuleForm.removeControl('password');
       }
     });
+    this.currentSection ='home';
 
-    this.getCapsule();
   }
 
 
   onImageChange(event: any): void {
-    const file = event.target.files[0];
-    if(file) {
-      this.imagePreviewurl = URL.createObjectURL(file);
-      this.uploadImage(file);
+    if (event.target.files && event.target.files.length > 0) {
+      const files: File[] = Array.from(event.target.files as FileList); // Ensure it's an array of File objects
+
+      console.log("Selected Files:", files); // Debugging: Check selected files
+
+      const maxImages = 5;
+
+      if (this.imageUrls.length + files.length > maxImages) {
+        alert("You can upload a maximum of 5 images.");
+        return;
+      }
+      this.uploadImages(files);
+    }
+    else {
+      console.warn('No files selected');
     }
   }
 
-  uploadImage(file: File): void {
-    const formData = new FormData();
-    formData.append('image', file, file.name);
 
-    this.http.post('http://localhost:2004/api/uploads', formData).subscribe(
+
+  uploadImages(files: any[]): void {
+    const formData = new FormData();
+    files.forEach((file) => formData.append('images', file));
+
+    this.http.post('http://localhost:2004/api/capsules/upload', formData).subscribe(
       (response: any) => {
-        this.imageUrls.push(response.imgUrl); // Store the uploaded image URL
-        alert('Image uploaded successfully!');
+        this.imageUrls = response.imageUrls;
       },
       (error) => {
-        alert('Failed to upload image: ' + error.error.message);
+        console.error('Image uploading failed ', error);
       }
     );
   }
+
+  goToCapsuleForm() {
+    this.router.navigate(['/capsule-form']); // Adjust the route as needed
+  }
+
 
   createCapsule(): void {
     if (this.capsuleForm.valid) {
@@ -145,6 +197,7 @@ export class WelcomeComponent implements OnInit {
         type: this.capsuleForm.value.type,
         password: this.capsuleForm.value.type === 'private' ? this.capsuleForm.value.password : '',
         images: this.imageUrls, // Add the image URLs to the form data
+        // oneTimeView: this.capsuleForm.value.oneTimeView,
       };
 
       this.http.post('http://localhost:2004/api/capsules/create', formData, {
@@ -155,6 +208,8 @@ export class WelcomeComponent implements OnInit {
           this.capsuleForm.reset();
           this.imageUrls = [];
           this.imagePreviewurl = null; // Reset the image URLs after creating the capsule
+          this.currentSection = 'dashboard';
+          this.getCapsule();
         },
         (error) => {
           alert('Failed to create capsule: ' + error.error.message);
@@ -191,25 +246,63 @@ export class WelcomeComponent implements OnInit {
     );
   }
 
-  viewCapsule(capsule:any): void {
-    if(capsule.type == 'private' && capsule.unlocked) {
-      this.selectedCapsule = capsule;
-      this.isPasswordDialogVisible = true;
-    }
-    else {
-      alert('You can view public capsules directly ');
+  viewCapsule(capsule: any): void {
+    if (capsule.type === 'private' && !capsule.unlocked) {
+      const enteredPassword = prompt('This capsule is private. Enter the password:');
+      if (enteredPassword !== capsule.password) {
+        alert('Incorrect password! Try again.');
+        return;
+      }
+      capsule.unlocked = true; // Unlock the capsule after correct password
     }
 
-    alert('Viewing capsule with id: ' + capsule);
+
+    console.log("Viewing capsule:", capsule); // Debugging log
+    console.log("Images:", capsule.images);
+    this.selectedCapsule = capsule;
   }
+
   shareCapsule(capsule: any): void {
-    if(capsule.type === 'private' && !capsule.unlocked) {
-      alert('private capsule required password validation before sharing ');
+    if (capsule.sharableLink) {
+      // Use the correct frontend URL
+      const frontendLink = `${window.location.origin}/shared/${capsule.sharableLink}`;
+      this.copyToClipboard(frontendLink);
+      return;
     }
-    else {
-      alert('capsule shared ');
-    }
+
+    // Generate the shareable link from the backend
+    this.http.post(`http://localhost:2004/api/capsules/share/${capsule._id}`, {}, {
+      withCredentials: true
+    }).subscribe(
+      (response: any) => {
+        if (response.sharableLink) {
+          capsule.sharableLink = response.sharableLink;
+          const frontendLink = `${window.location.origin}/shared/${response.sharableLink}`;
+          this.copyToClipboard(frontendLink);
+        } else {
+          alert('Failed to generate shareable link.');
+        }
+      },
+      (error) => {
+        console.error('Error generating shareable link', error);
+        alert('Error generating shareable link: ' + error.error.message);
+      }
+    );
   }
+
+  // Function to Copy Link to Clipboard
+  copyToClipboard(link: string): void {
+    navigator.clipboard.writeText(link)
+      .then(() => {
+        alert('Capsule link copied to clipboard!');
+      })
+      .catch(err => {
+        console.error('Error copying link', err);
+        alert('Failed to copy link');
+      });
+  }
+
+
 
   deleteCapsule(capsuleId: string): void {
     if(confirm('Are you sure you want to delete this capsule ')) {
@@ -226,4 +319,33 @@ export class WelcomeComponent implements OnInit {
       );
     }
   }
+
+
+  editCapsule(capsule: any): void {
+    const dialogRef = this.dialog.open(EditCapsuleComponent, {
+      width: '900px',
+      data: capsule
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.getCapsule();  // Refresh the list after update
+      }
+    });
+  }
+
+
+  logout() {
+    this.http.post('http://localhost:2004/auth/logout', {}).subscribe(
+      (response) => {
+        console.log('Logout successful', response);
+        // Optionally, handle redirection or UI changes
+        this.router.navigate(['/login']);
+      },
+      (error) => {
+        console.error('Logout failed', error);
+      }
+    );
+  }
+
 }

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// creating capsule schema
 const capsuleSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -13,7 +14,7 @@ const capsuleSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  content: { 
+  content: {
     type: mongoose.Schema.Types.Mixed,
     required: true,
   },
@@ -22,6 +23,22 @@ const capsuleSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
+  images: {
+    type: [String],
+    default: [],
+  },
+  isOneTimeView: {
+    type: Boolean,
+    default: false
+  },
+  viewed: {
+    type: Boolean,
+    default: false
+  },
+  sharableLink: {
+    type: String,
+    unique: true,
+  }
 
 });
 

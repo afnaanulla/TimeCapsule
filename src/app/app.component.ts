@@ -18,4 +18,5 @@ export class AppComponent {
   title = 'TimeCapsule';
 
   constructor(private router: Router) {}
+
 }

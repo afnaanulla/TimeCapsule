@@ -1,0 +1,89 @@
+/* Ensures the cursor works correctly inside the dialog */
+.mat-dialog-container {
+  cursor: default !important;
+  padding: 20px;
+  border-radius: 10px;
+  background: #fff;
+}
+
+/* Allow normal cursor inside the dialog */
+.mat-dialog-container * {
+  cursor: auto !important;
+}
+
+/* Text cursor for form fields */
+.mat-dialog-container input,
+.mat-dialog-container textarea,
+.mat-dialog-container select {
+  cursor: text !important;
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  transition: border 0.3s ease;
+}
+
+/* Highlight border on focus */
+.mat-dialog-container input:focus,
+.mat-dialog-container textarea:focus,
+.mat-dialog-container select:focus {
+  border-color: #6200ea;
+  box-shadow: 0 0 5px rgba(98, 0, 234, 0.5);
+}
+
+/* Proper cursor for buttons */
+.mat-dialog-container button {
+  cursor: pointer !important;
+  padding: 10px 15px;
+  font-size: 16px;
+  background: #6200ea;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+}
+
+/* Hover effect for buttons */
+.mat-dialog-container button:hover {
+  background: #4500b5;
+}
+
+/* Cancel button styling */
+.cancel-button {
+  background: #ccc;
+  color: #333;
+}
+
+.cancel-button:hover {
+  background: #999;
+}
+
+/* Form Layout */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Form field wrapper */
+.form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Dialog Title */
+.dialog-title {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+/* Button container */
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
