@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "npm install --legacy-peer-deeps"
+    "postinstall": "npm install -g @angular/cli"
   },
   "keywords": [],
   "author": "",
