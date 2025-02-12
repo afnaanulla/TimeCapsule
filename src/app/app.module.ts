@@ -8,7 +8,9 @@ import { HomeComponent } from './home/home.component';
 import {NgxBeautifyCursorModule} from 'ngx-beautify-cursor';
 
 
-// Angular Material Modules
+// angular material modules
+
+
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -22,6 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSelectModule } from '@angular/material/select';
+
 
 
 //primeng
@@ -67,7 +70,9 @@ import { EditCapsuleComponent } from './edit-capsule/edit-capsule.component';
     CommonModule,
     SharedCapsuleComponent,
     EditCapsuleComponent,
-    MatSelectModule
+    MatSelectModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
   ],
   providers: [DatePipe],
   bootstrap: [],

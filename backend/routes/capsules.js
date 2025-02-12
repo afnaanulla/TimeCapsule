@@ -28,6 +28,8 @@ const verifySession = (req, res, next) => {
   next();
 };
 
+//route to upload images
+
 router.post('/upload', upload.array("images", 5), (req, res) => {
   if (req.files.length > 0) {
     const imageUrls = req.files.map((file) => `/uploads/${file.filename}`);
@@ -37,7 +39,7 @@ router.post('/upload', upload.array("images", 5), (req, res) => {
   }
 })
 
-// Route to create a new capsule
+// route to create a new capsule
 router.post('/create', verifySession, async (req, res) => {
   try {
     const { title, description, unlockDate, content, images, isOneTimeView } = req.body;
@@ -45,7 +47,6 @@ router.post('/create', verifySession, async (req, res) => {
     const sharableId = uuidv4();
 
     console.log("Received Images:", images);
-    // Extract uploaded image paths
     const imageArray = Array.isArray(images) ? images : [];
 
 
@@ -57,7 +58,7 @@ router.post('/create', verifySession, async (req, res) => {
       description,
       unlockDate,
       content,
-      images: imageArray, // Save images array
+      images: imageArray,
       user: userId,
       isOneTimeView,
       sharableLink: sharableId,
@@ -71,7 +72,7 @@ router.post('/create', verifySession, async (req, res) => {
   }
 });
 
-// Route to get all capsules for the logged-in user
+// route to get all capsules for the logged-in user
 router.get('/', verifySession, async (req, res) => {
   try {
     const userId = req.session.user._id;
@@ -89,9 +90,10 @@ router.get('/', verifySession, async (req, res) => {
   }
 });
 
-// Route to get a single capsule by ID
+// route to get a single capsule by ID
 router.get('/:id', verifySession, async (req, res) => {
   const { id } = req.params;
+  // const { password } = req.query;
 
   if (!ObjectId.isValid(id)) {
     return res.status(400).json({ message: 'Invalid capsule ID' });
@@ -102,7 +104,6 @@ router.get('/:id', verifySession, async (req, res) => {
     if (!capsule) {
       return res.status(404).json({ message: 'Capsule not found' });
     }
-
     if(capsule.isOneTimeView && capsule.viewed) {
       return res.status(403).json({ message: 'This capsule is already viewed '});
     }
@@ -119,7 +120,7 @@ router.get('/:id', verifySession, async (req, res) => {
   }
 });
 
-//Route to delete capsule
+//route to delete capsule
 
 router.delete('/:id', verifySession, async(req, res) => {
   const { id } = req.params;
@@ -140,6 +141,8 @@ router.delete('/:id', verifySession, async(req, res) => {
     return res.status(500).json({ message: 'Internal server error '});
   }
 });
+
+// route to share capsule
 
 router.get('/share/:id', async (req, res) => {
   try {
@@ -167,6 +170,8 @@ router.get('/share/:id', async (req, res) => {
   }
 });
 
+
+// route to update capsule
 router.put('/capsules/:id', async (req, res) => {
   try {
       const { id } = req.params;
@@ -175,6 +180,7 @@ router.put('/capsules/:id', async (req, res) => {
       if (!updatedCapsule) {
           return res.status(404).json({ message: 'Capsule not found' });
       }
+
 
       res.json(updatedCapsule);
   } catch (error) {

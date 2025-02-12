@@ -38,6 +38,9 @@ const capsuleSchema = new mongoose.Schema({
   sharableLink: {
     type: String,
     unique: true,
+  },
+  password: {
+    type: String,
   }
 
 });

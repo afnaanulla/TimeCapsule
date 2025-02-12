@@ -1,111 +1,130 @@
-.allcontent {
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 20px;
-  background: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  font-family: 'Poppins', sans-serif;
-  color: #333;
+:host {
+  display: block;
+  background-color: #000000;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
-
-h1 {
-  text-align: center;
-  font-size: 2.5rem;
-  color: #0044cc;
-  font-weight: bold;
-  margin-bottom: 15px;
-}
-
-h2 {
-  font-size: 1.8rem;
-  color: #007bff;
-  margin-top: 30px;
-}
-
-h3 {
-  font-size: 1.4rem;
-  color: #333;
-  margin-bottom: 8px;
-}
-
-.boldh3 {
-  font-weight: bold;
-  color: #d9534f;
-}
-
-p {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  color: #555;
-  margin-bottom: 15px;
-}
-
-.features-list {
-  list-style: none;
+* {
+  box-sizing: border-box;
+  margin: 0;
   padding: 0;
 }
 
-.feature {
-  background: #fff;
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease-in-out;
+body {
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+  color: #ffffff;
+  background-color: #000000;
 }
 
-.feature:hover {
-  transform: translateY(-5px);
+.allcontent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
 }
 
-.feature h3 {
-  color: #28a745;
+h1,
+h2,
+h3 {
+  margin-bottom: 1rem;
+  color: #4a90e2;
+  font-family: 'Inter', sans-serif;
 }
 
-.feature p {
-  font-size: 1rem;
+h1 {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+h2 {
+  font-size: 2rem;
+  border-bottom: 2px solid #4a90e2;
+  padding-bottom: 0.5rem;
+  margin-top: 2rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+  color: #f39c12;
+}
+
+p {
+  margin-bottom: 1rem;
+  color: #ffffff;
 }
 
 ul {
   list-style-type: none;
-  padding: 0;
+  padding-left: 0;
 }
 
-ul li {
-  background: #f8f9fa;
-  padding: 12px;
-  border-left: 5px solid #007bff;
-  border-radius: 5px;
-  margin-bottom: 12px;
-  transition: 0.3s ease;
+
+.features-list,
+ul:not(.features-list) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 1rem;
 }
 
-ul li:hover {
-  background: #e9ecef;
+.feature,
+li {
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Links & Contact Section */
-p a {
-  color: #0044cc;
-  text-decoration: none;
+.feature:hover,
+li:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(255, 255, 255, 0.15);
+}
+
+.boldh3 {
+  font-family: 'Inter', sans-serif;
   font-weight: bold;
 }
 
-p a:hover {
-  text-decoration: underline;
+br {
+  display: none;
+}
+.logos {
+  display: flex;                /* Use flexbox for layout */
+  justify-content: center;      /* Center the logos horizontally */
+  align-items: center;          /* Center the logos vertically */
+  padding: 20px;               /* Padding around the logos */
+  border-top: 1px solid #ddd;
+    /* Top border */
 }
 
-p:last-child {
-  text-align: center;
-  font-weight: bold;
+.logos a {
+  margin: 0 15px;              /* Margin between logos */
+  transition: transform 0.3s;  /* Smooth hover effect */
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+.logos a:hover {
+  transform: scale(1.1);        /* Scale up logo on hover */
+}
+
+.logos img {
+  width: 40px;                  /* Set a fixed width for logos */
+  height: auto;                 /* Maintain aspect ratio */
+}
+.github-logo {
+  color: #ddd;
+}
+
+
+
+
+@media screen and (max-width: 768px) {
   .allcontent {
-    max-width: 95%;
-    padding: 15px;
+    padding: 1rem;
   }
 
   h1 {
@@ -113,14 +132,60 @@ p:last-child {
   }
 
   h2 {
-    font-size: 1.6rem;
+    font-size: 1.75rem;
   }
 
   h3 {
-    font-size: 1.2rem;
+    font-size: 1.25rem;
   }
 
-  p {
-    font-size: 1rem;
+  .features-list,
+  ul:not(.features-list) {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .logos {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 15px;
+  }
+
+  .logos a {
+    margin: 5px;
+  }
+
+  .logos img {
+    width: 35px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .logos {
+    justify-content: space-around;
+    padding: 10px;
+  }
+
+  .logos a {
+    margin: 5px;
+  }
+
+  .logos img {
+    width: 30px; 
   }
 }

@@ -1,8 +1,9 @@
-  import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+  import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
   import { RouterModule } from '@angular/router';
   import { gsap } from 'gsap';
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
   import { CommonModule } from '@angular/common';
+  // import { debounceTime, fromEvent } from 'rxjs';
 
 
 
@@ -24,6 +25,13 @@
     ngOnInit(): void {
       gsap.registerPlugin(ScrollTrigger);
       this.animateElements();
+
+
+      // debounce events
+      // fromEvent(window, 'scroll').pipe(debounceTime(55000)).subscribe(() => {
+      //   this.animateElements();
+      // })
+
     }
 
     animateElements(): void {

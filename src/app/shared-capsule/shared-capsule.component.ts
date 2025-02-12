@@ -11,7 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class SharedCapsuleComponent implements OnInit {
   capsuleId: string | null = null;
-  capsule: any = null; // ✅ Changed from capsuleData to capsule
+  capsule: any = null;
   errorMessage: string | null = null;
 
   constructor(private route: ActivatedRoute) {}
@@ -30,7 +30,7 @@ export class SharedCapsuleComponent implements OnInit {
         })
         .then(data => {
           console.log('Fetched Capsule:', data);
-          this.capsule = data; // ✅ Changed from capsuleData to capsule
+          this.capsule = data; 
         })
         .catch(error => {
           console.error('Error fetching capsule:', error);

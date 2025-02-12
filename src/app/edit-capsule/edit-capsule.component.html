@@ -1,33 +1,54 @@
 <ngx-beautify-cursor></ngx-beautify-cursor>
-<form [formGroup]="editCapsuleForm" (ngSubmit)="updateCapsule()">
-  <mat-form-field appearance="outline">
-    <mat-label>Title</mat-label>
-    <input matInput formControlName="title">
-  </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Content</mat-label>
-    <textarea matInput formControlName="content"></textarea>
-  </mat-form-field>
+<div class="edit-capsule-container">
+  <h2 class="form-title">Edit Time Capsule</h2>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Unlock Date</mat-label>
-    <input matInput type="date" formControlName="unlockDate">
-  </mat-form-field>
+  <form [formGroup]="editCapsuleForm" (ngSubmit)="updateCapsule()" class="capsule-form">
+    <div class="form-group">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Title</mat-label>
+        <input matInput formControlName="title" placeholder="Enter capsule title">
+        <mat-icon matPrefix>title</mat-icon>
+        <mat-error *ngIf="editCapsuleForm.get('title')?.errors?.['required']">
+          Title is required
+        </mat-error>
+      </mat-form-field>
+    </div>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Type</mat-label>
-    <mat-select formControlName="type">
-      <mat-option value="public">Public</mat-option>
-      <mat-option value="private">Private</mat-option>
-    </mat-select>
-  </mat-form-field>
+    <div class="form-group">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Content</mat-label>
+        <textarea matInput formControlName="content" placeholder="Write your message here..." rows="4" class="content-textarea"></textarea>
+        <mat-icon matPrefix>edit_note</mat-icon>
+        <mat-error *ngIf="editCapsuleForm.get('content')?.errors?.['required']">
+          Content is required
+        </mat-error>
+      </mat-form-field>
+    </div>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Password</mat-label>
-    <input matInput type="password" formControlName="password">
-  </mat-form-field>
+    <div class="form-group">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Unlock Date</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="unlockDate" placeholder="Choose a date">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
 
-  <button mat-raised-button color="primary" type="submit">Update Capsule</button>
-  <button mat-button type="button" (click)="closeDialog()">Cancel</button>
-</form>
+        <mat-error *ngIf="editCapsuleForm?.get('unlockDate')?.hasError('required')">
+          Unlock date is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="button-group">
+      <button mat-button type="button" (click)="closeDialog()" class="cancel-btn">
+        <mat-icon>close</mat-icon>
+        Cancel
+      </button>
+
+      <button mat-raised-button color="primary" type="submit" [disabled]="!editCapsuleForm.valid" class="submit-btn">
+        <mat-icon>update</mat-icon>
+        Update Capsule
+      </button>
+    </div>
+  </form>
+</div>

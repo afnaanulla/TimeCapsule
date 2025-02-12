@@ -33,7 +33,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
-    cookie: { secure: false, httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }, // 1 day session
+    cookie: { secure: false, httpOnly: true, maxAge: 24 * 60 * 60 * 1000 },
   })
 );
 
@@ -48,12 +48,12 @@ app.get('/', (req, res) => {
   res.send('Server is running...');
 });
 
-// serve static files from the 'dist' folder where the angular app is present
-app.use(express.static(path.join(__dirname, 'dist', 'your-angular-app-name')));
 
-// catch all route to send all requests to Angular's index.html (for csr)
+app.use(express.static(path.join(__dirname, 'dist', 'time-capsule')));
+
+
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'your-angular-app-name', 'index.html'));
+  res.sendFile(path.join(__dirname, 'dist', 'time-capsule', 'index.html'));
 });
 const PORT = process.env.PORT || 2004;
 

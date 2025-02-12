@@ -1,9 +1,15 @@
+:host{
+  background-color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Inter',sans-serif;
+}
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
   padding: 20px;
 }
 
@@ -20,6 +26,7 @@ mat-card {
 
 mat-card-header {
   margin-bottom: 24px;
+  font-family: 'inter',sans-serif;
 }
 
 mat-card-title {
@@ -27,6 +34,7 @@ mat-card-title {
   font-weight: bold;
   color: #333;
   margin-bottom: 8px;
+  font-family: 'inter',sans-serif;
 }
 
 mat-card-subtitle {
@@ -49,6 +57,7 @@ button {
   width: 48%;
   height: 44px;
   font-size: 16px;
+  font-family: 'Inter',sans-serif;
 
   mat-icon {
     margin-right: 8px;

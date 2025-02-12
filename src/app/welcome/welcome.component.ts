@@ -24,10 +24,11 @@ import { MatDialogModule } from '@angular/material/dialog';
 import {MatRadioModule} from '@angular/material/radio';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { EditCapsuleComponent } from '../edit-capsule/edit-capsule.component';
 
-import { debounceTime, min } from 'rxjs/operators';
+// import { debounceTime, min } from 'rxjs/operators';
 
 @Component({
   selector: 'app-welcome',
@@ -78,12 +79,15 @@ export class WelcomeComponent implements OnInit {
   selectedSharedCapsule: any = null;
   currentTheme: string = 'default';
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private dialog: MatDialog, private router: Router) {}
+  constructor(private fb: FormBuilder, private http: HttpClient, private dialog: MatDialog, private router: Router, private snackBar: MatSnackBar) {}
 
 
+  // function to close model
   closeModel() {
     this.selectedCapsule = null
   }
+
+  //function to open sidenav bar
   onSidenavClick(section: string): void{
     this.isMenuOpen = false;
     this.currentSection = section;
@@ -96,6 +100,8 @@ export class WelcomeComponent implements OnInit {
     }
   }
 
+  // no use of this
+
   passwordCorrect(capsule: any): boolean {
     if (capsule.type === 'private') {
       return this.enteredPassword === capsule.password;
@@ -103,11 +109,18 @@ export class WelcomeComponent implements OnInit {
     return true;
   }
 
+  // no use of this
+
   validatePassword(capsule: any): void {
     if (this.passwordCorrect(capsule)) {
       this.enteredPassword = '';
     } else {
-      alert('Incorrect password! Try again.');
+      this.snackBar.open('Wrong password', 'Close', {
+        duration: 3000,
+        verticalPosition: 'top',
+        horizontalPosition: 'center',
+        panelClass: ['snackbar-warning']
+      });
     }
   }
 
@@ -143,26 +156,37 @@ export class WelcomeComponent implements OnInit {
       }
     });
     this.currentSection ='home';
-
   }
 
 
+  // function to add images in capsule and models folder
+
   onImageChange(event: any): void {
     if (event.target.files && event.target.files.length > 0) {
-      const files: File[] = Array.from(event.target.files as FileList); // Ensure it's an array of File objects
+      const files: File[] = Array.from(event.target.files as FileList); //ensure its and array of images
 
-      console.log("Selected Files:", files); // Debugging: Check selected files
+      // console.log("Selected Files:", files); // debugging: check the  selected files
 
       const maxImages = 5;
 
       if (this.imageUrls.length + files.length > maxImages) {
-        alert("You can upload a maximum of 5 images.");
+        this.snackBar.open('You can upload maximum 5 images', 'Close', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          panelClass: ['snackbar-warning']
+        });
         return;
       }
       this.uploadImages(files);
     }
     else {
-      console.warn('No files selected');
+      this.snackBar.open('No files selected', 'Close', {
+        duration: 3000,
+        verticalPosition: 'top',
+        horizontalPosition: 'center',
+        panelClass: ['snackbar-warning']
+      });
     }
   }
 
@@ -174,16 +198,22 @@ export class WelcomeComponent implements OnInit {
 
     this.http.post('http://localhost:2004/api/capsules/upload', formData).subscribe(
       (response: any) => {
-        this.imageUrls = response.imageUrls;
+        this.imageUrls = [...this.imageUrls, ...response.imageUrls];
       },
       (error) => {
         console.error('Image uploading failed ', error);
+        this.snackBar.open('Image uploading failed', 'Close', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'left',
+          panelClass: ['snackbar-warning']
+        });
       }
     );
   }
 
   goToCapsuleForm() {
-    this.router.navigate(['/capsule-form']); // Adjust the route as needed
+    this.router.navigate(['/capsule-form']);
   }
 
 
@@ -196,7 +226,7 @@ export class WelcomeComponent implements OnInit {
         content: this.capsuleForm.value.content,
         type: this.capsuleForm.value.type,
         password: this.capsuleForm.value.type === 'private' ? this.capsuleForm.value.password : '',
-        images: this.imageUrls, // Add the image URLs to the form data
+        images: this.imageUrls,
         // oneTimeView: this.capsuleForm.value.oneTimeView,
       };
 
@@ -204,22 +234,38 @@ export class WelcomeComponent implements OnInit {
         withCredentials: true,
       }).subscribe(
         (response: any) => {
-          alert('Capsule created successfully!');
+          this.snackBar.open('Capsule Created Successfully ', 'Close', {
+            duration: 3000,
+            verticalPosition: 'top',
+            horizontalPosition: 'right',
+            panelClass: ['snackbar-success']
+          });
           this.capsuleForm.reset();
           this.imageUrls = [];
-          this.imagePreviewurl = null; // Reset the image URLs after creating the capsule
+          this.imagePreviewurl = null;
           this.currentSection = 'dashboard';
           this.getCapsule();
         },
         (error) => {
           alert('Failed to create capsule: ' + error.error.message);
+          this.snackBar.open('Failed to create capsule', 'Close', {
+            duration: 3000,
+            verticalPosition: 'top',
+            horizontalPosition: 'left',
+            panelClass: ['snackbar-warning']
+          });
         }
       );
     } else {
-      alert('Form is invalid');
+      this.snackBar.open('Form is invalid', 'Close', {
+        duration: 3000,
+        verticalPosition: 'top',
+        horizontalPosition: 'left',
+        panelClass: ['snackbar-warning']
+      });
     }
   }
-    // Upload image and get its URL
+    // upload image and get its URL
 
 
   getCapsule(): void {
@@ -235,6 +281,12 @@ export class WelcomeComponent implements OnInit {
       },
       (error) => {
         alert('Failed to load capsule' + error.error.message);
+        this.snackBar.open('Failed to load capsules', 'Close', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'left',
+          panelClass: ['snackbar-warning']
+        });
       }
     );
   }
@@ -246,6 +298,8 @@ export class WelcomeComponent implements OnInit {
     );
   }
 
+
+  // no use of it
   viewCapsule(capsule: any): void {
     if (capsule.type === 'private' && !capsule.unlocked) {
       const enteredPassword = prompt('This capsule is private. Enter the password:');
@@ -257,20 +311,19 @@ export class WelcomeComponent implements OnInit {
     }
 
 
-    console.log("Viewing capsule:", capsule); // Debugging log
-    console.log("Images:", capsule.images);
+    // console.log("Viewing capsule:", capsule); // Debugging log
+    // console.log("Images:", capsule.images);
     this.selectedCapsule = capsule;
   }
 
   shareCapsule(capsule: any): void {
     if (capsule.sharableLink) {
-      // Use the correct frontend URL
       const frontendLink = `${window.location.origin}/shared/${capsule.sharableLink}`;
       this.copyToClipboard(frontendLink);
       return;
     }
 
-    // Generate the shareable link from the backend
+    // generating  shareable link from the backend
     this.http.post(`http://localhost:2004/api/capsules/share/${capsule._id}`, {}, {
       withCredentials: true
     }).subscribe(
@@ -280,25 +333,46 @@ export class WelcomeComponent implements OnInit {
           const frontendLink = `${window.location.origin}/shared/${response.sharableLink}`;
           this.copyToClipboard(frontendLink);
         } else {
-          alert('Failed to generate shareable link.');
+          this.snackBar.open('Failed to generate sharable link ', 'Close', {
+            duration: 3000,
+            verticalPosition: 'top',
+            horizontalPosition: 'left',
+            panelClass: ['snackbar-warning']
+          });
         }
       },
       (error) => {
-        console.error('Error generating shareable link', error);
-        alert('Error generating shareable link: ' + error.error.message);
+        // console.error('Error generating shareable link', error);
+        // alert('Error generating shareable link: ' + error.error.message);
+        this.snackBar.open('Error generating sharable link', 'Close', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'left',
+          panelClass: ['snackbar-warning']
+        });
       }
     );
   }
 
-  // Function to Copy Link to Clipboard
+  // function to copy link to clipboard
   copyToClipboard(link: string): void {
     navigator.clipboard.writeText(link)
       .then(() => {
-        alert('Capsule link copied to clipboard!');
+        this.snackBar.open('Capsule link copied to clipboard', 'Close', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'right',
+          panelClass: ['snackbar-success']
+        });
       })
       .catch(err => {
-        console.error('Error copying link', err);
-        alert('Failed to copy link');
+        // console.error('Error copying link', err);
+        this.snackBar.open('Failed to copy link', 'Close', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'left',
+          panelClass: ['snackbar-warning']
+        });
       });
   }
 
@@ -310,11 +384,22 @@ export class WelcomeComponent implements OnInit {
       withCredentials: true,
       }).subscribe(
         (response: any) => {
-          alert('Capsule deleted ');
+          this.snackBar.open('Capsule deleted', 'Close', {
+            duration: 3000,
+            verticalPosition: 'top',
+            horizontalPosition: 'right',
+            panelClass: ['snackbar-success']
+          });
           this.getCapsule();
         },
         (error) => {
-          alert('Failed to delete capsule ' + error.error.message);
+          //alert('Failed to delete capsule ' + error.error.message);
+          this.snackBar.open('Failed to delete capsule', 'Close', {
+            duration: 3000,
+            verticalPosition: 'top',
+            horizontalPosition: 'left',
+            panelClass: ['snackbar-warning']
+          });
         }
       );
     }
@@ -329,7 +414,7 @@ export class WelcomeComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.getCapsule();  // Refresh the list after update
+        this.getCapsule();
       }
     });
   }
@@ -338,12 +423,23 @@ export class WelcomeComponent implements OnInit {
   logout() {
     this.http.post('http://localhost:2004/auth/logout', {}).subscribe(
       (response) => {
-        console.log('Logout successful', response);
-        // Optionally, handle redirection or UI changes
+        // console.log('Logout successful', response);
+        this.snackBar.open('Logout successful', 'Close', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'right',
+          panelClass: ['snackbar-success']
+        });
         this.router.navigate(['/login']);
       },
       (error) => {
-        console.error('Logout failed', error);
+        // console.error('Logout failed', error);
+        this.snackBar.open('logout failed', 'Close', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'left',
+          panelClass: ['snackbar-warning']
+        });
       }
     );
   }

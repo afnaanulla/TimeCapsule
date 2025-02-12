@@ -1,34 +1,105 @@
+:host {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 5vw, 2rem);
+}
+
 .capsule-container {
-  max-width: 600px;
+  max-width: min(90%, 600px);
   margin: 20px auto;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
+  padding: clamp(1.5rem, 5vw, 2.5rem);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.05);
   text-align: center;
+  transform: translateY(0);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.capsule-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25), 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
-  color: #333;
+  color: #1a1a2e;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  margin-bottom: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
 }
 
 p {
-  font-size: 16px;
-  color: #555;
+  font-size: clamp(0.9rem, 2vw, 1rem);
+  color: #4a4a6a;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  max-width: 65ch;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .image-gallery {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: clamp(0.5rem, 2vw, 1rem);
+  padding: clamp(0.5rem, 2vw, 1rem);
+  margin-top: 1.5rem;
 }
 
 .image-gallery img {
-  width: 100px;
-  height: 100px;
+  width: 100%;
+  aspect-ratio: 1;
   object-fit: cover;
-  margin: 5px;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.image-gallery img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+@media screen and (max-width: 768px) {
+  .image-gallery {
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .capsule-container {
+    margin: 10px auto;
+  }
+
+  .image-gallery {
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+  }
+}
+
+
+html {
+  scroll-behavior: smooth;
+}
+
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1a1a2e;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #16213e;
 }

@@ -1,89 +1,250 @@
-/* Ensures the cursor works correctly inside the dialog */
-.mat-dialog-container {
-  cursor: default !important;
-  padding: 20px;
-  border-radius: 10px;
-  background: #fff;
+:host {
+  display: block;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  padding: clamp(1rem, 5vw, 3rem);
+  box-sizing: border-box;
 }
 
-/* Allow normal cursor inside the dialog */
-.mat-dialog-container * {
-  cursor: auto !important;
-}
-
-/* Text cursor for form fields */
-.mat-dialog-container input,
-.mat-dialog-container textarea,
-.mat-dialog-container select {
-  cursor: text !important;
+.edit-capsule-container {
   width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  outline: none;
-  transition: border 0.3s ease;
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 24px;
+  padding: clamp(2rem, 4vw, 3rem);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
 }
 
-/* Highlight border on focus */
-.mat-dialog-container input:focus,
-.mat-dialog-container textarea:focus,
-.mat-dialog-container select:focus {
-  border-color: #6200ea;
-  box-shadow: 0 0 5px rgba(98, 0, 234, 0.5);
+.edit-capsule-container::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0) 70%);
+  z-index: 0;
 }
 
-/* Proper cursor for buttons */
-.mat-dialog-container button {
-  cursor: pointer !important;
-  padding: 10px 15px;
-  font-size: 16px;
-  background: #6200ea;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  transition: background 0.3s ease;
-}
-
-/* Hover effect for buttons */
-.mat-dialog-container button:hover {
-  background: #4500b5;
-}
-
-/* Cancel button styling */
-.cancel-button {
-  background: #ccc;
-  color: #333;
-}
-
-.cancel-button:hover {
-  background: #999;
-}
-
-/* Form Layout */
-.form-container {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-/* Form field wrapper */
-.form-field {
-  display: flex;
-  flex-direction: column;
-}
-
-/* Dialog Title */
-.dialog-title {
-  font-size: 20px;
-  font-weight: bold;
+.form-title {
   text-align: center;
-  margin-bottom: 15px;
+  color: #1e293b;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  font-weight: 700;
+  margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+  position: relative;
+  z-index: 1;
 }
 
-/* Button container */
-.button-container {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
+.form-title::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(60px, 10%, 80px);
+  height: 4px;
+  background: linear-gradient(90deg, #6366f1, #818cf8);
+  border-radius: 2px;
 }
+
+.capsule-form {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 3vw, 2rem);
+  position: relative;
+  z-index: 1;
+}
+
+.form-group {
+  width: 100%;
+}
+
+.form-field {
+  width: 100%;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline {
+  color: #cbd5e1;
+  transition: color 0.3s ease;
+}
+
+.mat-form-field-appearance-outline:hover .mat-form-field-outline {
+  color: #94a3b8;
+}
+
+.mat-form-field-appearance-outline.mat-focused .mat-form-field-outline {
+  color: #6366f1;
+}
+
+.content-textarea {
+  min-height: clamp(120px, 20vh, 200px);
+  resize: vertical;
+}
+
+.button-group {
+  display: flex;
+  gap: clamp(0.5rem, 2vw, 1rem);
+  justify-content: flex-end;
+  margin-top: clamp(1.5rem, 3vw, 2rem);
+}
+
+.cancel-btn,
+.submit-btn {
+  padding: clamp(10px, 2vw, 12px) clamp(16px, 3vw, 24px);
+  border-radius: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
+}
+
+.cancel-btn {
+  color: #4b5563;
+  background: #f1f5f9;
+  border: 2px solid #e2e8f0;
+}
+
+.cancel-btn:hover {
+  background: #e2e8f0;
+  color: #1f2937;
+  transform: translateY(-2px);
+}
+
+.submit-btn {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: white;
+  border: none;
+}
+
+.submit-btn:hover {
+  background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+  transform: translateY(-2px);
+}
+
+.submit-btn:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+mat-icon {
+  margin-right: 8px;
+  color: #6b7280;
+  font-size: clamp(18px, 2vw, 24px);
+}
+
+@media screen and (max-width: 600px) {
+  .button-group {
+    flex-direction: column-reverse;
+  }
+
+  .button-group button {
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: 601px) and (max-width: 1024px) {
+  .edit-capsule-container {
+    max-width: 90%;
+  }
+
+  .form-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .form-field {
+    flex: 1 1 calc(50% - 0.5rem);
+    min-width: 200px;
+  }
+}
+
+@media screen and (min-width: 1025px) {
+  .edit-capsule-container {
+    max-width: 80%;
+  }
+
+  .form-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+
+  .form-field {
+    flex: 1 1 calc(33.333% - 1rem);
+    min-width: 200px;
+  }
+
+  .content-textarea {
+    flex-basis: 100%;
+  }
+}
+
+.form-group {
+  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-group:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.form-group:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.form-group:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.button-group {
+  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: 0.4s;
+}
+
+.form-field:hover {
+  transform: translateY(-2px);
+  transition: transform 0.3s ease;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(99, 102, 241, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+  }
+}
+
+.submit-btn:not(:disabled) {
+  animation: pulse 2s infinite;
+}
+
+.edit-capsule-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%239C92AC' fill-opacity='0.05' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
+  z-index: 0;
+  pointer-events: none;
+}
+

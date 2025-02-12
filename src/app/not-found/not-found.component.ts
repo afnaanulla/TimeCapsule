@@ -6,9 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./not-found.component.css']
 })
 export class NotFoundComponent implements OnInit {
-  currentTimeStamp: string = '';  // Update here to match the property name
+  currentTimeStamp: string = '';
 
   ngOnInit(): void {
-    this.currentTimeStamp = (new Date()).toISOString();  // Also update here
+    this.currentTimeStamp = (new Date()).toISOString();  
   }
 }

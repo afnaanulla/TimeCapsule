@@ -1,18 +1,22 @@
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <div class="allpage">
-  <!-- Logo Section -->
+  <!-- logo section -->
   <div class="logo">
     <img src="./assets/timeCapsule.png" alt="Time Capsule Logo">
     <h1>Time Capsule</h1>
   </div>
 
-  <!-- Toolbar with Hamburger Menu -->
+  <!-- toolbar with hamburger Menu -->
   <mat-toolbar class="header">
     <button mat-icon-button (click)="sidenav.toggle()">
       <mat-icon>{{ isMenuOpen ? 'menu_open' : 'menu' }}</mat-icon>
     </button>
   </mat-toolbar>
 
-  <!-- Sidenav -->
+  <!-- sidenav -->
   <mat-sidenav-container class="sidenavContainer">
     <mat-sidenav #sidenav mode="over" [(opened)]="isMenuOpen" class="sidenav">
       <mat-nav-list>
@@ -37,7 +41,7 @@
       </mat-nav-list>
     </mat-sidenav>
 
-    <!-- Main Content -->
+    <!-- main content -->
     <mat-sidenav-content [ngClass]="{ 'sidenav-open': isMenuOpen }">
       <div class="main-content">
         <h2 class="homeGreetings">{{greetings}}</h2>
@@ -61,14 +65,14 @@
               </div>
               <div class="step">
                 <h3>3. Share or Save</h3>
-                <p>Keep it private or share it with loved ones.</p>
+                <p>Keep it or share it with loved ones.</p>
               </div>
             </div>
           </div>
 
         </div>
 
-        <!-- Search Bar -->
+        <!-- search bar -->
         <div class="searchContainer" *ngIf="currentSection === 'inventory'">
           <mat-form-field appearance="fill" class="search-bar">
             <mat-label>Search Capsules</mat-label>
@@ -76,12 +80,12 @@
           </mat-form-field>
         </div>
 
-        <!-- Capsules Display Section -->
+        <!-- capsules display section -->
         <div class="capsules-container" *ngIf="currentSection === 'dashboard' || currentSection === 'inventory'">
           <div *ngFor="let capsule of filteredCapsules" class="capsule-card">
             <mat-card>
               <mat-card-header>
-                <mat-card-title>{{ capsule.title }}</mat-card-title>
+                <mat-card-title style="white-space:nowrap;overflow: hidden;text-overflow: ellipsis;display:block">{{ capsule.title }}</mat-card-title>
                 <mat-card-subtitle>{{ capsule.unlockDate | date: 'shortDate' }}</mat-card-subtitle>
               </mat-card-header>
 
@@ -107,10 +111,10 @@
 
         <div class="capsuleModel" *ngIf="selectedCapsule">
           <div class="modelContent">
-            <h2>{{ selectedCapsule.title }}</h2>
-            <p> {{ selectedCapsule.content }}</p>
+            <h2 style="color: red;">{{ selectedCapsule.title }}</h2>
+            <p style="color: rgb(32, 27, 27);"> {{ selectedCapsule.content }}</p>
 
-            <!-- Display Uploaded Images -->
+            <!-- display uploaded images -->
             <div *ngIf="imageUrls.length > 0">
               <h3>Newly Uploaded Images:</h3>
               <div class="image-gallery">
@@ -118,9 +122,9 @@
               </div>
             </div>
 
-            <!-- Display Capsule Images (if any exist) -->
+            <!-- display capsule images (if exist) -->
             <div *ngIf="selectedCapsule.images && selectedCapsule.images.length > 0">
-              <h3>Attached Images:</h3>
+              <h3 style="color: blue;">Attached Images:</h3>
               <div class="image-gallery">
                 <img *ngFor="let img of selectedCapsule.images" [src]="'http://localhost:2004' + img" class="capsule-image" alt="Capsule Image">
               </div>
@@ -129,7 +133,8 @@
             <button (click)="closeModel()"><mat-icon>close</mat-icon></button>
           </div>
         </div>
-        <!-- Create Capsule Section -->
+
+        <!-- create capsule section -->
         <div *ngIf="currentSection === 'create'">
           <mat-card class="create-capsule-card">
             <mat-card-header>
@@ -155,7 +160,7 @@
                   <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
 
-                <!-- image Section -->
+                <!-- image section -->
                   <mat-label>Upload Image Drag your items here </mat-label>
                   <input type="file" (change)="onImageChange($event)" accept="image/*">
 
@@ -164,32 +169,6 @@
                   <h4>Preview: you can add maximum 5</h4>
                   <img [src]="imagePreviewurl" alt="image preview" style="max-width: 200px; max-height:200px"/>
                 </div>
-
-
-                <!-- Privacy Selection -->
-                <div class="privacyOptions">
-                  <label>Privacy:</label>
-                  <mat-radio-group formControlName="type">
-                    <mat-radio-button value="public">Public</mat-radio-button>
-                    <mat-radio-button value="private">Private</mat-radio-button>
-                  </mat-radio-group>
-                </div>
-
-                <mat-form-field appearance="outline" class="full-width" *ngIf="capsuleForm.value.type === 'private'">
-                  <mat-label>Password</mat-label>
-                  <input matInput formControlName="password" type="password" placeholder="Enter password" required>
-                </mat-form-field>
-
-                <!-- Password Dialog -->
-                <mat-dialog-content *ngIf="isPasswordDialogVisible">
-                  <h2>Enter Password</h2>
-                  <mat-form-field appearance="fill">
-                    <mat-label>Password</mat-label>
-                    <input matInput [(ngModel)]="enteredPassword" type="password" placeholder="Enter password">
-                  </mat-form-field>
-                  <button mat-raised-button color="primary" (click)="validatePassword('capsule')">Submit</button>
-                  <button mat-raised-button color="warn" (click)="isPasswordDialogVisible = false">Cancel</button>
-                </mat-dialog-content>
                 <button mat-raised-button color="primary" type="submit" [disabled]="capsuleForm.invalid">Create Capsule</button>
               </form>
             </mat-card-content>
@@ -205,7 +184,5 @@
       </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
-
-
 </div>
 

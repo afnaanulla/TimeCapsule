@@ -1,15 +1,20 @@
+import { NgxBeautifyCursorModule } from 'ngx-beautify-cursor';
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
+
+
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { MatOptionModule } from '@angular/material/core';
-import { NgxBeautifyCursorModule } from 'ngx-beautify-cursor';
+import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-edit-capsule',
@@ -20,7 +25,12 @@ import { NgxBeautifyCursorModule } from 'ngx-beautify-cursor';
     MatSelectModule,
     MatOptionModule,
     CommonModule,
-    NgxBeautifyCursorModule
+    NgxBeautifyCursorModule,
+    MatButtonModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    ReactiveFormsModule,
+    MatIconModule,
   ],
   templateUrl: './edit-capsule.component.html',
   styleUrls: ['./edit-capsule.component.css'],
@@ -40,11 +50,12 @@ export class EditCapsuleComponent implements OnInit {
     this.editCapsuleForm = this.fb.group({
       title: [this.data.title, Validators.required],
       content: [this.data.content, Validators.required],
-      unlockDate: [this.data.unlockDate, Validators.required],
-      type: [this.data.type, Validators.required],
-      password: [this.data.password || ''],
+      unlockDate: [this.data.unlockDate, Validators.required]
     });
   }
+
+
+  // to update capsule data
 
   updateCapsule(): void {
     if (this.editCapsuleForm.valid) {
@@ -61,6 +72,9 @@ export class EditCapsuleComponent implements OnInit {
     }
   }
 
+
+  // function to close dialogBox
+  
   closeDialog(): void {
     this.dialogRef.close();
   }

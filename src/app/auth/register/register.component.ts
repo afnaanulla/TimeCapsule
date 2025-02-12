@@ -46,6 +46,8 @@ export class RegisterComponent implements OnInit {
   }
 
 
+  //function to check username
+
   checkUsername(): void {
     const usernameControl = this.registerForm.get('username');
     usernameControl?.markAsTouched()
@@ -60,6 +62,9 @@ export class RegisterComponent implements OnInit {
     }
   }
 
+
+  //function to check email
+
   checkEmail(): void {
     const emailControl = this.registerForm.get('email');
     emailControl?.markAsTouched()
@@ -73,15 +78,28 @@ export class RegisterComponent implements OnInit {
     }
   }
 
+
+  // function to register new user
+
   register(): void {
     if (this.registerForm.valid) {
       this.http.post('http://localhost:2004/auth/register', this.registerForm.value).subscribe(
         (response: any) => {
-          alert(response.message);
+          this.snackBar.open(response.message, 'Close', {
+            duration: 5000,
+            verticalPosition:'top',
+            horizontalPosition: 'right',
+            panelClass: ['snackbar-success']
+          });
           this.router.navigate(['/login']);
         },
         (error) => {
-          alert('Error' + error.error.message);
+          this.snackBar.open(error.error.message, 'Close', {
+            duration: 5000,
+            verticalPosition: 'bottom',
+            horizontalPosition: 'center',
+            panelClass:['snackbar-error']
+          })
         }
       );
     }
@@ -95,9 +113,10 @@ export class RegisterComponent implements OnInit {
     }
   }
 
+
+  // function to cancel form
+
   onCancel() {
-
-
     this.registerForm.reset();
     this.snackBar.open('You have cancelled the registration', 'Close', {
       duration: 5000,

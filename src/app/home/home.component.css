@@ -1,63 +1,70 @@
-
-.logo{
-  /* background-color: yellow; */
-  height: 50px;
-  width: 175px;
-  margin-left: 20px;
-  margin-top: 10px;
-  img{
-    height: 50px;
-    width: 50px;
-  }
-  p{
-    margin-left: 50px;
-    margin-top: -40px;
-    font-family: 'Inter', sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-  }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
+body {
+  font-family: "Inter", sans-serif;
+  overflow-x: hidden;
+}
 
-.newbutns{
+.logo {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.logo img {
+  height: 50px;
+  width: 50px;
+}
+
+.logo p {
+  margin-left: 10px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.newbutns {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
+  padding: 10px;
 }
+
 .newbutns button {
   background: none;
   border: none;
   font-size: 16px;
   cursor: pointer;
-  font-family: 'Inter', sans-serif;
-
 }
-.firstdiv{
-  height: 50%;
+
+.firstdiv {
   width: 100%;
   background-color: rgba(212, 216, 223, 0.541);
   display: flex;
-  align-items: start;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px;
   border-radius: 1px;
   margin-top: 4px;
 }
-.f12t{
-  margin-top: 15px;
-  margin-left: 25px;
 
-  h1{
-    font-family: 'Inter', sans-serif;
-    font-size: 40px;
-  }
-  h6{
-    font-family: 'Inter', sans-serif;
-    font-size: 15px;
-    opacity: 0.9;
-    color: #606067;
-  }
+.f12t {
+  margin-bottom: 20px;
 }
-.f12th1{
-  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+.f12t h1 {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+}
+
+.f12t h6 {
+  font-size: 1.2em;
+  opacity: 0.9;
+  color: #606067;
 }
 
 .f121btn {
@@ -69,181 +76,179 @@
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
-  font-family: 'Inter', sans-serif;
   font-weight: 550;
-  margin-top: 220px;
-  margin-left: -490px;
+  align-self: flex-start;
 }
 
-.secondDiv{
-  /* background-color: green; */
-  height: 30%;
+.secondDiv {
   width: 100%;
   display: flex;
-  gap: 60px;
-  overflow: hidden;
-  margin-top: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
 }
 
-
-.secureStorage{
-  height: 75%;
-  width: 25%;
-  /* background-color: blue; */
-  margin-left: 50px;
-  margin-top: 24px;
-  overflow: hidden;
+.secureStorage {
+  flex: 1 1 300px;
+  max-width: 400px;
+  padding: 20px;
   border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(30, 30, 30, 1);
+  box-shadow: 0px 4px 10px rgba(30, 30, 30, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
 
-  img{
-    height: 40px;
-    width: 40px;
-    margin-top: 8px;
-    margin-left: 20px;
-  }
+.secureStorage img {
+  height: 40px;
+  width: 40px;
+  margin-bottom: 10px;
+}
 
-  h3{
-    margin-top: -32px;
-    margin-left: 80px;
-    font-family: 'Inter', sans-serif;
-    font-size: 24px;
-    font-weight: 500;
-  }
+.secureStorage h3 {
+  font-size: 1.5em;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
 
-  p{
-    margin-left: 29px;
-    font-family: 'Inter', sans-serif;
-    font-size: 15px;
-    font-weight: 400;
-
-  }
+.secureStorage p {
+  font-size: 1.1em;
+  font-weight: 400;
 }
 
 .thirdDiv {
-  height: 60%;
   width: 100%;
   background-color: rgba(212, 216, 223, 0.541);
-  position:absolute;
-
-  h2{
-    margin-top: 25px;
-    margin-left: 30px;
-    font-size: 26px;
-  }
+  padding: 20px;
 }
 
-.summerContainer{
-  /* background-color: red; */
-  height: 80%;
+.thirdDiv h2 {
+  font-size: 1.8em;
+  margin-bottom: 20px;
+}
+
+.summerContainer {
   display: flex;
   flex-wrap: wrap;
-  gap: 50px;
+  justify-content: center;
+  gap: 20px;
 }
-.summerMemories{
-  height: 250px;
+
+.summerMemories {
   width: 200px;
   background-color: #606067;
-  gap: 10px;
-  margin-top: 25px;
-  margin-left: 25px;
   border-radius: 5px;
-  box-shadow: 0px 4px 10px rgba(30, 30, 30, 1);
-  cursor:not-allowed;
-
-  h4{
-    margin-top: 90px;
-    font-size: 18px;
-    margin-left: 13px;
-    color: whitesmoke;
-    font-family: 'Inter',sans-serif;
-    cursor: not-allowed;
-  }
-}
-.summertext{
-  background-color: whitesmoke;
-  height: 120px;
-  width: 200px;
-  flex-direction: column;
-  justify-content: flex-start;
-  display: flex;
+  box-shadow: 0px 4px 10px rgba(30, 30, 30, 0.1);
+  overflow: hidden;
   cursor: not-allowed;
-  h3{
-    margin-left: 10px;
-    margin-top: 10px;
-    font-family: 'Inter', sans-serif;
-    cursor: not-allowed;
-  }
-
-  p{
-    margin-left: 20px;
-    margin-top: -15px;
-    font-family: 'Inter', sans-serif;
-    cursor: not-allowed;
-  }
-
-
-  img{
-    height: 20px;
-    width: 20px;
-    margin-left: 5px;
-  }
-  h6{
-    margin-left: 30px;
-    margin-top: -17px;
-    font-size: 14px;
-    font-family: 'Inter', sans-serif;
-
-
-  }
 }
 
-.end{
-  height: 30%;
-  width: 100%;
-  /* background-color: red; */
+.summerMemories h4 {
+  padding: 10px;
+  font-size: 18px;
+  color: whitesmoke;
+}
+
+.summertext {
+  background-color: whitesmoke;
+  padding: 10px;
+}
+
+.summertext h3 {
+  margin-bottom: 5px;
+}
+
+.summertext p {
+  margin-bottom: 10px;
+}
+
+.summertext img {
+  height: 20px;
+  width: 20px;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+.summertext h6 {
+  display: inline;
+  font-size: 14px;
+}
+
+.end {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
 }
-.footer-links{
-  margin-left: 550px;
+
+.footer-links {
   display: flex;
   gap: 10px;
-  margin-top: 60px;
-  cursor: pointer;
-
-  a{
-    text-decoration: none;
-    color: rgb(0, 0, 0);
-    font-size: 16px;
-    font-weight: bold;
-  }
+  margin-bottom: 20px;
 }
+
+.footer-links a {
+  text-decoration: none;
+  color: rgb(0, 0, 0);
+  font-size: 16px;
+  font-weight: bold;
+}
+
 .footer-links a:hover {
   text-decoration: underline;
 }
 
 .footer-icons {
-  display: flex; /* Align items horizontally */
-  gap: 15px; /* Space between icons */
-  justify-content: center; /* Center icons horizontally */
-  margin-top: 55px; /* Adjust spacing from other elements */
-  margin-left: 435px;
-}
-
-.footer-icons a {
-  display: inline-block; /* Ensure anchor tags don't collapse */
+  display: flex;
+  gap: 15px;
 }
 
 .footer-icons img {
   height: 22px;
   width: 22px;
 }
-.circle{
+
+.circle {
   height: 20px;
   width: 20px;
   background-color: #000000;
-  border-radius: 50px;
+  border-radius: 50%;
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 10px;
+  left: 10px;
 }
+
+@media (max-width: 768px) {
+  .logo {
+    padding: 10px;
+  }
+
+  .logo img {
+    height: 40px;
+    width: 40px;
+  }
+
+  .logo p {
+    font-size: 16px;
+  }
+
+  .f12t h1 {
+    font-size: 2em;
+  }
+
+  .f121btn {
+    align-self: center;
+  }
+
+  .secureStorage {
+    flex: 1 1 100%;
+  }
+
+  .footer-links,
+  .footer-icons {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
