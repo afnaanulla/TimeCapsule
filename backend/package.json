@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "postinstall": "npm install -g @angular/cli",
     "start": "node server.js",
     "build": "ng build --configuration=production"
   },
