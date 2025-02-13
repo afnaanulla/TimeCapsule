@@ -2,6 +2,7 @@
     "name": "time-capsule",
     "version": "0.0.0",
     "scripts": {
+      "postinstall": "npm ci --omit=dev",
       "ng": "ng",
       "start": "ng serve",
       "build": "npx ng build",
