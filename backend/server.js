@@ -16,7 +16,7 @@ dotenv.config();
 
 const app = express();
 
-const corsOptions =
+const corsOptions = {
   origin: ['http://localhost:4200',],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
