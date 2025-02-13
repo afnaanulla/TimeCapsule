@@ -1,4 +1,4 @@
-import { NgxBeautifyCursorModule } from 'ngx-beautify-cursor';
+
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Inject, OnInit } from '@angular/core';
@@ -25,7 +25,6 @@ import { MatIconModule } from '@angular/material/icon';
     MatSelectModule,
     MatOptionModule,
     CommonModule,
-    NgxBeautifyCursorModule,
     MatButtonModule,
     MatDatepickerModule,
     MatNativeDateModule,
@@ -74,7 +73,7 @@ export class EditCapsuleComponent implements OnInit {
 
 
   // function to close dialogBox
-  
+
   closeDialog(): void {
     this.dialogRef.close();
   }

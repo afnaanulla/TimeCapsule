@@ -3,16 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "npm install -g @angular/cli"
+    "start": "node server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.3",
