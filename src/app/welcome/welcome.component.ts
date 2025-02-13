@@ -196,7 +196,7 @@ export class WelcomeComponent implements OnInit {
     const formData = new FormData();
     files.forEach((file) => formData.append('images', file));
 
-    this.http.post('https://time-capsule-9vv9.onrender.com/api/capsules/upload', formData).subscribe(
+    this.http.post('http://localhost:2004/api/capsules/upload', formData).subscribe(
       (response: any) => {
         this.imageUrls = [...this.imageUrls, ...response.imageUrls];
       },
@@ -230,7 +230,7 @@ export class WelcomeComponent implements OnInit {
         // oneTimeView: this.capsuleForm.value.oneTimeView,
       };
 
-      this.http.post('https://time-capsule-9vv9.onrender.com/api/capsules/create', formData, {
+      this.http.post('http://localhost:2004/api/capsules/create', formData, {
         withCredentials: true,
       }).subscribe(
         (response: any) => {
@@ -269,7 +269,7 @@ export class WelcomeComponent implements OnInit {
 
 
   getCapsule(): void {
-    this.http.get('https://time-capsule-9vv9.onrender.com/api/capsules', {
+    this.http.get('http://localhost:2004/api/capsules', {
       withCredentials: true,
     }).subscribe(
       (response: any) => {
@@ -280,7 +280,7 @@ export class WelcomeComponent implements OnInit {
         this.filteredCapsules = this.capsules;
       },
       (error) => {
-        // alert('Failed to load capsule' + error.error.message);
+        alert('Failed to load capsule' + error.error.message);
         this.snackBar.open('Failed to load capsules', 'Close', {
           duration: 3000,
           verticalPosition: 'top',
@@ -304,12 +304,7 @@ export class WelcomeComponent implements OnInit {
     if (capsule.type === 'private' && !capsule.unlocked) {
       const enteredPassword = prompt('This capsule is private. Enter the password:');
       if (enteredPassword !== capsule.password) {
-        this.snackBar.open('Incorrect password ', 'Close', {
-          duration: 3000,
-          verticalPosition: 'top',
-          horizontalPosition: 'left',
-          panelClass: ['snackbar-warning']
-        });
+        alert('Incorrect password! Try again.');
         return;
       }
       capsule.unlocked = true; // Unlock the capsule after correct password
@@ -329,7 +324,7 @@ export class WelcomeComponent implements OnInit {
     }
 
     // generating  shareable link from the backend
-    this.http.post(`https://time-capsule-9vv9.onrender.com/api/capsules/share/${capsule._id}`, {}, {
+    this.http.post(`http://localhost:2004/api/capsules/share/${capsule._id}`, {}, {
       withCredentials: true
     }).subscribe(
       (response: any) => {
@@ -383,32 +378,32 @@ export class WelcomeComponent implements OnInit {
 
 
 
-    deleteCapsule(capsuleId: string): void {
-      if(confirm('Are you sure you want to delete this capsule ')) {
-        this.http.delete(`https://time-capsule-9vv9.onrender.com/api/capsules/${capsuleId}`, {
-        withCredentials: true,
-        }).subscribe(
-          (response: any) => {
-            this.snackBar.open('Capsule deleted', 'Close', {
-              duration: 3000,
-              verticalPosition: 'top',
-              horizontalPosition: 'right',
-              panelClass: ['snackbar-success']
-            });
-            this.getCapsule();
-          },
-          (error) => {
-            //alert('Failed to delete capsule ' + error.error.message);
-            this.snackBar.open('Failed to delete capsule', 'Close', {
-              duration: 3000,
-              verticalPosition: 'top',
-              horizontalPosition: 'left',
-              panelClass: ['snackbar-warning']
-            });
-          }
-        );
-      }
+  deleteCapsule(capsuleId: string): void {
+    if(confirm('Are you sure you want to delete this capsule ')) {
+      this.http.delete(`http://localhost:2004/api/capsules/${capsuleId}`, {
+      withCredentials: true,
+      }).subscribe(
+        (response: any) => {
+          this.snackBar.open('Capsule deleted', 'Close', {
+            duration: 3000,
+            verticalPosition: 'top',
+            horizontalPosition: 'right',
+            panelClass: ['snackbar-success']
+          });
+          this.getCapsule();
+        },
+        (error) => {
+          //alert('Failed to delete capsule ' + error.error.message);
+          this.snackBar.open('Failed to delete capsule', 'Close', {
+            duration: 3000,
+            verticalPosition: 'top',
+            horizontalPosition: 'left',
+            panelClass: ['snackbar-warning']
+          });
+        }
+      );
     }
+  }
 
 
   editCapsule(capsule: any): void {
@@ -426,7 +421,7 @@ export class WelcomeComponent implements OnInit {
 
 
   logout() {
-    this.http.post('https://time-capsule-9vv9.onrender.com/auth/logout', {}).subscribe(
+    this.http.post('http://localhost:2004/auth/logout', {}).subscribe(
       (response) => {
         // console.log('Logout successful', response);
         this.snackBar.open('Logout successful', 'Close', {

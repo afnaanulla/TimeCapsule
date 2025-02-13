@@ -6,8 +6,6 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const MongoStore = require('connect-mongo');
-const morgan = require('morgan');
-
 
 const authRoutes = require('./routes/auth');
 const capsuleRoutes = require('./routes/capsules');
@@ -17,7 +15,7 @@ dotenv.config();
 const app = express();
 
 const corsOptions = {
-  origin: ['https://time-capsule-tau.vercel.app',],
+  origin: 'http://localhost:4200',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
@@ -28,7 +26,6 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static('uploads'));
-app.use(morgan('dev'));
 
 app.use(
   session({
@@ -36,7 +33,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
-    cookie: { secure: true, httpOnly: true, maxAge: 24 * 60 * 60 * 1000 },
+    cookie: { secure: false, httpOnly: true, maxAge: 24 * 60 * 60 * 1000 },
   })
 );
 
@@ -61,7 +58,7 @@ app.get('*', (req, res) => {
 const PORT = process.env.PORT || 2004;
 
 mongoose
-  .connect(process.env.MONGO_URI, {})
+  .connect(process.env.MONGO_URI)
   .then(() => console.log('Connected to MongoDB'))
   .catch((err) => console.error('Failed to connect to MongoDB', err));
 

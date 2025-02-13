@@ -18,10 +18,10 @@ export class SharedCapsuleComponent implements OnInit {
 
   ngOnInit() {
     this.capsuleId = this.route.snapshot.paramMap.get('id');
-    // console.log('Shared Capsule ID:', this.capsuleId);
+    console.log('Shared Capsule ID:', this.capsuleId);
 
     if (this.capsuleId) {
-      fetch(`https://time-capsule-9vv9.onrender.com/api/capsules/share/${this.capsuleId}`)
+      fetch(`http://localhost:2004/api/capsules/share/${this.capsuleId}`)
         .then(response => {
           if (!response.ok) {
             throw new Error('Capsule not found');
@@ -29,11 +29,11 @@ export class SharedCapsuleComponent implements OnInit {
           return response.json();
         })
         .then(data => {
-          // console.log('Fetched Capsule:', data);
+          console.log('Fetched Capsule:', data);
           this.capsule = data;
         })
         .catch(error => {
-          // console.error('Error fetching capsule:', error);
+          console.error('Error fetching capsule:', error);
           this.errorMessage = 'Capsule not found or expired.';
         });
     }

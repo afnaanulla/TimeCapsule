@@ -15,7 +15,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-edit-capsule',
@@ -39,7 +38,6 @@ export class EditCapsuleComponent implements OnInit {
   editCapsuleForm!: FormGroup;
 
   constructor(
-    private snackBar: MatSnackBar,
     private fb: FormBuilder,
     private http: HttpClient,
     public dialogRef: MatDialogRef<EditCapsuleComponent>,
@@ -60,24 +58,14 @@ export class EditCapsuleComponent implements OnInit {
 
   updateCapsule(): void {
     if (this.editCapsuleForm.valid) {
-      this.http.put(`https://time-capsule-9vv9.onrender.com/api/capsules/${this.data._id}`, this.editCapsuleForm.value)
+      this.http.put(`http://localhost:2004/api/capsules/${this.data._id}`, this.editCapsuleForm.value)
         .subscribe(
           () => {
-            this.snackBar.open('Capsule updated ', 'Close', {
-              duration: 3000,
-              verticalPosition: 'top',
-              horizontalPosition: 'right',
-              panelClass: ['snackbar-warning']
-            });
+            alert('Capsule updated successfully!');
             this.dialogRef.close(true);
           },
           error => {
-            this.snackBar.open('Failed to update capsule ', 'Close', {
-              duration: 3000,
-              verticalPosition: 'top',
-              horizontalPosition: 'left',
-              panelClass: ['snackbar-warning']
-            });
+            alert('Failed to update capsule: ' + error.error.message);
           }
         );
     }
