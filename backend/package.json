@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-  "postinstall": "npx ng version",
-  "start": "node server.js",
-  "build": "npx ng build --configuration=production",
-  "dev": "nodemon server.js"
-},
+    "postinstall": "npm install -g @angular/cli",
+    "start": "node server.js",
+    "build": "ng build --configuration=production",
+    "dev": "nodemon server.js"
+
+  },
   "dependencies": {
     "@angular/cli": "^17.0.0",
     "@angular/compiler-cli": "^17.0.0",
