@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "scripts": {
     "start": "node backend/server.js",
-    "build": "ng build --configuration production --output-path=dist",
     "postinstall": "npm run build",
     "ng": "ng",
     "serve": "ng serve",
