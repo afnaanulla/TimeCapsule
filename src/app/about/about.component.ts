@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NgxBeautifyCursorComponent } from 'ngx-beautify-cursor';
+
 
 @Component({
   selector: 'app-about',
@@ -7,7 +7,7 @@ import { NgxBeautifyCursorComponent } from 'ngx-beautify-cursor';
   imports: [],
   templateUrl: './about.component.html',
   styleUrls: ['./about.component.css'],
-  providers: [NgxBeautifyCursorComponent]
+  providers: []
 
 })
 export class AboutComponent {
