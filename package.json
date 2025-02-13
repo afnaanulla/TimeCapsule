@@ -5,7 +5,6 @@
     "start": "node backend/server.js",
     "build": "ng build --configuration production --output-path=dist",
     "postinstall": "npm run build",
-    "vercel-build": "npm run build && cp -r dist/* backend/dist",
     "ng": "ng",
     "serve": "ng serve",
     "watch": "ng build --watch --configuration development"
