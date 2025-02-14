@@ -126,7 +126,7 @@
             <div *ngIf="selectedCapsule.images && selectedCapsule.images.length > 0">
               <h3 style="color: blue;">Attached Images:</h3>
               <div class="image-gallery">
-                <img *ngFor="let img of selectedCapsule.images" [src]="'https://time-capsule-pas3.onrender.com' + img" class="capsule-image" alt="Capsule Image">
+                <img *ngFor="let img of selectedCapsule.images" [src]="'http://localhost:2004' + img" class="capsule-image" alt="Capsule Image">
               </div>
             </div>
 

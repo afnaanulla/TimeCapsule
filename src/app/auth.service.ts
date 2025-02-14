@@ -12,6 +12,6 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   logout(): Observable<any> {
-    return this.http.post('https://time-capsule-pas3.onrender.com/auth/logout', {});
+    return this.http.post('http:/localhost:2004/auth/logout', {});
   }
 }

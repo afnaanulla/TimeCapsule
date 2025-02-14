@@ -196,7 +196,7 @@ export class WelcomeComponent implements OnInit {
     const formData = new FormData();
     files.forEach((file) => formData.append('images', file));
 
-    this.http.post('https://time-capsule-pas3.onrender.com/api/capsules/upload', formData).subscribe(
+    this.http.post('http://localhost:2004/api/capsules/upload', formData).subscribe(
       (response: any) => {
         this.imageUrls = [...this.imageUrls, ...response.imageUrls];
       },
@@ -230,7 +230,7 @@ export class WelcomeComponent implements OnInit {
         // oneTimeView: this.capsuleForm.value.oneTimeView,
       };
 
-      this.http.post('https://time-capsule-pas3.onrender.com/api/capsules/create', formData, {
+      this.http.post('http://localhost:2004/api/capsules/create', formData, {
         withCredentials: true,
       }).subscribe(
         (response: any) => {
@@ -269,7 +269,7 @@ export class WelcomeComponent implements OnInit {
 
 
   getCapsule(): void {
-    this.http.get('https://time-capsule-pas3.onrender.com/api/capsules', {
+    this.http.get('http://localhost:2004/api/capsules', {
       withCredentials: true,
     }).subscribe(
       (response: any) => {
@@ -324,7 +324,7 @@ export class WelcomeComponent implements OnInit {
     }
 
     // generating  shareable link from the backend
-    this.http.post(`https://time-capsule-pas3.onrender.com/api/capsules/share/${capsule._id}`, {}, {
+    this.http.post(`http://localhost:2004/api/capsules/share/${capsule._id}`, {}, {
       withCredentials: true
     }).subscribe(
       (response: any) => {
@@ -380,7 +380,7 @@ export class WelcomeComponent implements OnInit {
 
   deleteCapsule(capsuleId: string): void {
     if(confirm('Are you sure you want to delete this capsule ')) {
-      this.http.delete(`https://time-capsule-pas3.onrender.com/api/capsules/${capsuleId}`, {
+      this.http.delete(`http://localhost:2004/api/capsules/${capsuleId}`, {
       withCredentials: true,
       }).subscribe(
         (response: any) => {
@@ -421,7 +421,7 @@ export class WelcomeComponent implements OnInit {
 
 
   logout() {
-    this.http.post('https://time-capsule-pas3.onrender.com/auth/logout', {}).subscribe(
+    this.http.post('http://localhost:2004/auth/logout', {}).subscribe(
       (response) => {
         // console.log('Logout successful', response);
         this.snackBar.open('Logout successful', 'Close', {
