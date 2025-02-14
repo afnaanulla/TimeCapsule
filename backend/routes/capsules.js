@@ -28,13 +28,15 @@ const upload = multer({ storage: storage });
 //route to upload images
 
 router.post('/upload', authenticateToken, upload.array("images", 5), (req, res) => {
-  if (req.files.length > 0) {
-    const imageUrls = req.files.map((file) => `${req.body}://${req.get('host')}/uploads/${file.filename}`);
-    res.json({ imageUrls });
-  } else {
-    res.status(400).send("No files uploaded");
+  if (!req.files || req.files.length === 0) {
+    return res.status(400).json({ error: "No files uploaded" });
   }
+
+  const imageUrls = req.files.map((file) => `${req.protocol}://${req.get('host')}/uploads/${file.filename}`);
+
+  res.json({ imageUrls });
 });
+
 
 // route to create a new capsule
 router.post('/create', authenticateToken, async (req, res) => {
