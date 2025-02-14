@@ -167,9 +167,8 @@ export class WelcomeComponent implements OnInit {
 
       // console.log("Selected Files:", files); // debugging: check the  selected files
 
-      const maxImages = 5;
 
-      if (this.imageUrls.length + files.length > maxImages) {
+      if (this.imageUrls.length + files.length > 5) {
         this.snackBar.open('You can upload maximum 5 images', 'Close', {
           duration: 3000,
           verticalPosition: 'top',
@@ -178,6 +177,7 @@ export class WelcomeComponent implements OnInit {
         });
         return;
       }
+
       this.uploadImages(files);
     }
     else {
@@ -203,6 +203,7 @@ export class WelcomeComponent implements OnInit {
       withCredentials: true,
     }).subscribe(
       (response: any) => {
+        console.log("Response from server:", response);
         this.imageUrls = [...this.imageUrls, ...response.imageUrls];
       },
       (error) => {

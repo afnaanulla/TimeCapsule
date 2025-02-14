@@ -6,6 +6,11 @@ const { ObjectId } = require('mongoose').Types;
 const Capsule = require('../models/capsule');
 const { v4: uuidv4 } = require('uuid');
 const { authenticateToken } = require('../routes/auth');
+const fs = require('fs');
+const uploadDir = 'uploads/';
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
 
 // const sharableLink = `${req.protocol}://${req.get('host')}/api/capsules/share/${uuidv4()}`;
 
@@ -20,25 +25,16 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-
-// const verifySession = (req, res, next) => {
-//   console.log('Session data: ', req.session);
-//   if (!req.session || !req.session.user) {
-//     return res.status(401).json({ message: 'Not authenticated' });
-//   }
-//   next();
-// };
-
 //route to upload images
 
 router.post('/upload', authenticateToken, upload.array("images", 5), (req, res) => {
   if (req.files.length > 0) {
-    const imageUrls = req.files.map((file) => `/uploads/${file.filename}`);
+    const imageUrls = req.files.map((file) => `${req.body}://${req.get('host')}/uploads/${file.filename}`);
     res.json({ imageUrls });
   } else {
     res.status(400).send("No files uploaded");
   }
-})
+});
 
 // route to create a new capsule
 router.post('/create', authenticateToken, async (req, res) => {
