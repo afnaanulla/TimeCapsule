@@ -2,10 +2,11 @@
   "name": "time-capsule",
   "version": "1.0.0",
   "scripts": {
-    "start": "node backend/server.js",
-    "postinstall": "npm run build",
+   "start": "node backend/server.js",
+  " postinstall": "npm run build",
     "ng": "ng",
     "serve": "ng serve",
+    "build": "ng build --configuration=production",
     "watch": "ng build --watch --configuration development"
   },
   "private": true,
