@@ -58,7 +58,7 @@ export class EditCapsuleComponent implements OnInit {
 
   updateCapsule(): void {
     if (this.editCapsuleForm.valid) {
-      this.http.put(`http://localhost:2004/api/capsules/${this.data._id}`, this.editCapsuleForm.value)
+      this.http.put(`https://time-capsule-pas3.onrender.com/api/capsules/${this.data._id}`, this.editCapsuleForm.value)
         .subscribe(
           () => {
             alert('Capsule updated successfully!');

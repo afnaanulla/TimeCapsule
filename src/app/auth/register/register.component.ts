@@ -83,7 +83,7 @@ export class RegisterComponent implements OnInit {
 
   register(): void {
     if (this.registerForm.valid) {
-      this.http.post('https://time-capsule-9vv9.onrender.com/auth/register', this.registerForm.value).subscribe(
+      this.http.post('https://time-capsule-pas3.onrender.com/auth/register', this.registerForm.value).subscribe(
         (response: any) => {
           this.snackBar.open(response.message, 'Close', {
             duration: 5000,

@@ -7,12 +7,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule} from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule} from '@angular/material/button';
-import { trigger, transition,style,animate } from '@angular/animations';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { RegisterComponent } from '../register/register.component';
 
 @Component({
   selector: 'app-login',
@@ -49,7 +46,7 @@ export class LoginComponent implements OnInit {
 
     //post request to send code
 
-    this.http.post('https://time-capsule-9vv9.onrender.com/auth/login', { username }, { withCredentials: true}).subscribe(
+    this.http.post('https://time-capsule-pas3.onrender.com/auth/login', { username }, { withCredentials: true}).subscribe(
       (response) => {
         this.snackBar.open('Code sent to your email', 'Close', {
           duration: 5000,
@@ -70,7 +67,7 @@ export class LoginComponent implements OnInit {
 
   onLogin(): void {
     if(this.loginForm.valid) {
-      this.http.post('http://localhost:2004/auth/verify-code', this.loginForm.value).subscribe(
+      this.http.post('https://time-capsule-pas3.onrender.com/auth/verify-code', this.loginForm.value).subscribe(
         (response) => {
           this.snackBar.open('Login successful!', 'Close', {
             duration: 5000,

@@ -1,5 +1,5 @@
 *{
-  font-family: "Open Sans", serif;
+  font-family: "Inter", sans-serif;
   overflow: hidden;
   background-color: #20203c;
 }
@@ -9,5 +9,5 @@
   color: white !important;
   font-weight: bold !important;
   padding: 16px !important;
-  border-radius: 4px !important; 
+  border-radius: 4px !important;
 }

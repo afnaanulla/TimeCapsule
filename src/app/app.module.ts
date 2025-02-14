@@ -5,8 +5,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule, DatePipe } from '@angular/common';
 import { HomeComponent } from './home/home.component';
-import {NgxBeautifyCursorModule} from 'ngx-beautify-cursor';
-
 
 // angular material modules
 
@@ -66,7 +64,6 @@ import { EditCapsuleComponent } from './edit-capsule/edit-capsule.component';
     DatePipe,
     MatSnackBarModule,
     AppRoutingModule,
-    NgxBeautifyCursorModule,
     CommonModule,
     SharedCapsuleComponent,
     EditCapsuleComponent,
