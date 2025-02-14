@@ -198,7 +198,7 @@ export class WelcomeComponent implements OnInit {
 
     const token = localStorage.getItem('jwtToken');
 
-    this.http.post('http://localhost:2004/api/capsules/upload', formData, {
+    this.http.post('https://time-capsule-pas3.onrender.com/api/capsules/upload', formData, {
       headers: { Authorization: `Bearer ${token}` },
       withCredentials: true,
     }).subscribe(
@@ -236,7 +236,7 @@ export class WelcomeComponent implements OnInit {
       };
       const token = localStorage.getItem('jwtToken');
 
-      this.http.post('http://localhost:2004/api/capsules/create', formData, {
+      this.http.post('https://time-capsule-pas3.onrender.com/api/capsules/create', formData, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       }).subscribe(
@@ -277,7 +277,7 @@ export class WelcomeComponent implements OnInit {
 
   getCapsule(): void {
     const token = localStorage.getItem('jwtToken');
-    this.http.get('http://localhost:2004/api/capsules', {
+    this.http.get('https://time-capsule-pas3.onrender.com/api/capsules', {
       headers: { Authorization: `Bearer ${token}` },
       withCredentials: true,
     }).subscribe(
@@ -334,7 +334,7 @@ export class WelcomeComponent implements OnInit {
 
     const token = localStorage.getItem('jwtToken');
     // generating  shareable link from the backend
-    this.http.post(`http://localhost:2004/api/capsules/share/${capsule._id}`, {}, {
+    this.http.post(`https://time-capsule-pas3.onrender.com/api/capsules/share/${capsule._id}`, {}, {
       headers: { Authorization: `Bearer ${token}` },
       withCredentials: true
     }).subscribe(
@@ -351,6 +351,14 @@ export class WelcomeComponent implements OnInit {
             panelClass: ['snackbar-warning']
           });
         }
+        if (!capsule || !capsule._id) {
+          this.snackBar.open('Invalid capsule ID', 'Close', {
+            duration: 3000,
+            panelClass: ['snackbar-warning'],
+          });
+          return;
+        }
+
       },
       (error) => {
         // console.error('Error generating shareable link', error);
@@ -392,7 +400,7 @@ export class WelcomeComponent implements OnInit {
   deleteCapsule(capsuleId: string): void {
     if(confirm('Are you sure you want to delete this capsule ')) {
       const token = localStorage.getItem('jwtToken');
-      this.http.delete(`http://localhost:2004/api/capsules/${capsuleId}`, {
+      this.http.delete(`https://time-capsule-pas3.onrender.com/api/capsules/${capsuleId}`, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       }).subscribe(
@@ -434,7 +442,7 @@ export class WelcomeComponent implements OnInit {
 
 
   logout() {
-    this.http.post('http://localhost:2004/auth/logout', {},{
+    this.http.post('https://time-capsule-pas3.onrender.com/auth/logout', {},{
       withCredentials: true
   }).subscribe(
       (response) => {

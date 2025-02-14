@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
 
     //post request to send code
 
-    this.http.post('http://localhost:2004/auth/login', { username }, { withCredentials: true}).subscribe(
+    this.http.post('https://time-capsule-pas3.onrender.com/auth/login', { username }, { withCredentials: true}).subscribe(
       (response) => {
 
 
@@ -72,7 +72,7 @@ export class LoginComponent implements OnInit {
 
   onLogin(): void {
     if(this.loginForm.valid) {
-      this.http.post<{ token: string; message: string }>('http://localhost:2004/auth/verify-code', this.loginForm.value).subscribe(
+      this.http.post<{ token: string; message: string }>('https://time-capsule-pas3.onrender.com/auth/verify-code', this.loginForm.value).subscribe(
         (response) => {
           localStorage.setItem('jwtToken', response.token);
           this.snackBar.open('Login successful!', 'Close', {

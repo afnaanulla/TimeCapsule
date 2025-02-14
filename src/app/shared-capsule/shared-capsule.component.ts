@@ -21,8 +21,8 @@ export class SharedCapsuleComponent implements OnInit {
     console.log('Shared Capsule ID:', this.capsuleId);
 
     if (this.capsuleId) {
-      fetch(`http://localhost:2004/api/capsules/share/${this.capsuleId}`, {
-        credentials: 'include' 
+      fetch(`https://time-capsule-pas3.onrender.com/api/capsules/share/${this.capsuleId}`, {
+        credentials: 'include'
       })
         .then(response => {
           if (!response.ok) {
@@ -39,5 +39,6 @@ export class SharedCapsuleComponent implements OnInit {
           this.errorMessage = 'Capsule not found or expired.';
         });
     }
+
   }
 }
