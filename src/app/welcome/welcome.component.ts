@@ -196,7 +196,12 @@ export class WelcomeComponent implements OnInit {
     const formData = new FormData();
     files.forEach((file) => formData.append('images', file));
 
-    this.http.post('http://localhost:2004/api/capsules/upload', formData).subscribe(
+    const token = localStorage.getItem('jwtToken');
+
+    this.http.post('http://localhost:2004/api/capsules/upload', formData, {
+      headers: { Authorization: `Bearer ${token}` },
+      withCredentials: true,
+    }).subscribe(
       (response: any) => {
         this.imageUrls = [...this.imageUrls, ...response.imageUrls];
       },
@@ -229,8 +234,10 @@ export class WelcomeComponent implements OnInit {
         images: this.imageUrls,
         // oneTimeView: this.capsuleForm.value.oneTimeView,
       };
+      const token = localStorage.getItem('jwtToken');
 
       this.http.post('http://localhost:2004/api/capsules/create', formData, {
+        headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       }).subscribe(
         (response: any) => {
@@ -269,7 +276,9 @@ export class WelcomeComponent implements OnInit {
 
 
   getCapsule(): void {
+    const token = localStorage.getItem('jwtToken');
     this.http.get('http://localhost:2004/api/capsules', {
+      headers: { Authorization: `Bearer ${token}` },
       withCredentials: true,
     }).subscribe(
       (response: any) => {
@@ -323,8 +332,10 @@ export class WelcomeComponent implements OnInit {
       return;
     }
 
+    const token = localStorage.getItem('jwtToken');
     // generating  shareable link from the backend
     this.http.post(`http://localhost:2004/api/capsules/share/${capsule._id}`, {}, {
+      headers: { Authorization: `Bearer ${token}` },
       withCredentials: true
     }).subscribe(
       (response: any) => {
@@ -380,8 +391,10 @@ export class WelcomeComponent implements OnInit {
 
   deleteCapsule(capsuleId: string): void {
     if(confirm('Are you sure you want to delete this capsule ')) {
+      const token = localStorage.getItem('jwtToken');
       this.http.delete(`http://localhost:2004/api/capsules/${capsuleId}`, {
-      withCredentials: true,
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
       }).subscribe(
         (response: any) => {
           this.snackBar.open('Capsule deleted', 'Close', {
@@ -421,8 +434,11 @@ export class WelcomeComponent implements OnInit {
 
 
   logout() {
-    this.http.post('http://localhost:2004/auth/logout', {}).subscribe(
+    this.http.post('http://localhost:2004/auth/logout', {},{
+      withCredentials: true
+  }).subscribe(
       (response) => {
+        localStorage.removeItem('jwtToken');
         // console.log('Logout successful', response);
         this.snackBar.open('Logout successful', 'Close', {
           duration: 3000,

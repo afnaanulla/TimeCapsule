@@ -51,6 +51,8 @@ export class LoginComponent implements OnInit {
 
     this.http.post('http://localhost:2004/auth/login', { username }, { withCredentials: true}).subscribe(
       (response) => {
+
+
         this.snackBar.open('Code sent to your email', 'Close', {
           duration: 5000,
           panelClass: ['snackbar-success'],
@@ -70,8 +72,9 @@ export class LoginComponent implements OnInit {
 
   onLogin(): void {
     if(this.loginForm.valid) {
-      this.http.post('http://localhost:2004/auth/verify-code', this.loginForm.value).subscribe(
+      this.http.post<{ token: string; message: string }>('http://localhost:2004/auth/verify-code', this.loginForm.value).subscribe(
         (response) => {
+          localStorage.setItem('jwtToken', response.token);
           this.snackBar.open('Login successful!', 'Close', {
             duration: 5000,
             panelClass: ['snackbar-success'],

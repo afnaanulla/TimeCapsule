@@ -3,7 +3,14 @@ const router = express.Router();
 const User = require('../models/user');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 
+
+const dotenv = require('dotenv');
+dotenv.config();
+
+
+const SECRET_KEY = process.env.JWT_SECRET || "your_secret_key";
 // register user
 router.post('/register', async (req, res) => {
   try {
@@ -40,8 +47,8 @@ router.post('/login', async (req, res) => {
     user.verificationCode = verificationCode;
     await user.save();
 
-    req.session.user = { _id: user._id, username: user.username };
-    await req.session.save();
+    // req.session.user = { _id: user._id, username: user.username };
+    // await req.session.save();
 
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -80,24 +87,38 @@ router.post('/verify-code', async (req, res) => {
     if (!user || user.verificationCode !== code) {
       return res.status(400).json({ message: 'Invalid username or verification code' });
     }
-    req.session.user = {_id: user._id, username: user.username };
-    await req.session.save();
 
-    res.status(200).json({ message: 'Login successful' });
+    const token = jwt.sign({ _id: user._id, username: user.username}, SECRET_KEY, { expiresIn: "7d" } );
+
+
+    res.status(200).json({ message: 'Login successful', token });
   } catch (err) {
     console.error('Verification error:', err);
     res.status(500).json({ message: 'Server error' });
   }
+
+
 });
 
+const authenticateToken = (req, res, next) => {
+  const token = req.header('Authorization');
+  if (!token) return res.status(401).json({ message: 'Access denied. No token provided.' });
+
+  try {
+    const verified = jwt.verify(token.replace('Bearer ', ''), SECRET_KEY);
+    req.user = verified; // Store user info in request
+    next();
+  } catch (err) {
+    res.status(403).json({ message: 'Invalid token' });
+  }
+};
+
+
+
+
 router.post('/logout', async(req, res) => {
-  try{
-    req.session.destroy((err) => {
-      if(err) {
-        return res.status(500).json({ message: 'Error destroying session '});
-      }
-      res.status(200).json({ message: 'Logout successfully '});
-    });
+  try {
+    res.status(200).json({ message: 'Logout successfully '});
   }
   catch(err) {
     console.error('Logout error ', err);
@@ -105,4 +126,4 @@ router.post('/logout', async(req, res) => {
   }
 });
 
-module.exports = router;
+module.exports = { router, authenticateToken } ;

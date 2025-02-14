@@ -83,8 +83,10 @@ export class RegisterComponent implements OnInit {
 
   register(): void {
     if (this.registerForm.valid) {
-      this.http.post('http:localhost:2004/auth/register', this.registerForm.value).subscribe(
+      this.http.post('http://localhost:2004/auth/register', this.registerForm.value).subscribe(
         (response: any) => {
+
+          localStorage.setItem('jwtToken', response.token);
           this.snackBar.open(response.message, 'Close', {
             duration: 5000,
             verticalPosition:'top',

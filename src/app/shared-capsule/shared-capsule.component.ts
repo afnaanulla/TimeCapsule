@@ -21,7 +21,9 @@ export class SharedCapsuleComponent implements OnInit {
     console.log('Shared Capsule ID:', this.capsuleId);
 
     if (this.capsuleId) {
-      fetch(`http://localhost:2004/api/capsules/share/${this.capsuleId}`)
+      fetch(`http://localhost:2004/api/capsules/share/${this.capsuleId}`, {
+        credentials: 'include' 
+      })
         .then(response => {
           if (!response.ok) {
             throw new Error('Capsule not found');

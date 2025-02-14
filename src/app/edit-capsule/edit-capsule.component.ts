@@ -57,8 +57,12 @@ export class EditCapsuleComponent implements OnInit {
   // to update capsule data
 
   updateCapsule(): void {
+    const token = localStorage.getItem('jwtToken');
     if (this.editCapsuleForm.valid) {
-      this.http.put(`http://localhost:2004/api/capsules/${this.data._id}`, this.editCapsuleForm.value)
+      this.http.put(`http://localhost:2004/api/capsules/${this.data._id}`, this.editCapsuleForm.value, {
+        headers: { Authorization: `Bearer ${token}` }, // Attach JWT token
+        withCredentials: true
+      })
         .subscribe(
           () => {
             alert('Capsule updated successfully!');

@@ -5,6 +5,7 @@ const router = express.Router();
 const { ObjectId } = require('mongoose').Types;
 const Capsule = require('../models/capsule');
 const { v4: uuidv4 } = require('uuid');
+const { authenticateToken } = require('../routes/auth');
 
 // const sharableLink = `${req.protocol}://${req.get('host')}/api/capsules/share/${uuidv4()}`;
 
@@ -20,17 +21,17 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 
-const verifySession = (req, res, next) => {
-  console.log('Session data: ', req.session);
-  if (!req.session || !req.session.user) {
-    return res.status(401).json({ message: 'Not authenticated' });
-  }
-  next();
-};
+// const verifySession = (req, res, next) => {
+//   console.log('Session data: ', req.session);
+//   if (!req.session || !req.session.user) {
+//     return res.status(401).json({ message: 'Not authenticated' });
+//   }
+//   next();
+// };
 
 //route to upload images
 
-router.post('/upload', upload.array("images", 5), (req, res) => {
+router.post('/upload', authenticateToken, upload.array("images", 5), (req, res) => {
   if (req.files.length > 0) {
     const imageUrls = req.files.map((file) => `/uploads/${file.filename}`);
     res.json({ imageUrls });
@@ -40,10 +41,10 @@ router.post('/upload', upload.array("images", 5), (req, res) => {
 })
 
 // route to create a new capsule
-router.post('/create', verifySession, async (req, res) => {
+router.post('/create', authenticateToken, async (req, res) => {
   try {
     const { title, description, unlockDate, content, images, isOneTimeView } = req.body;
-    const userId = req.session.user._id;
+    const userId = req.user._id;
     const sharableId = uuidv4();
 
     console.log("Received Images:", images);
@@ -73,9 +74,9 @@ router.post('/create', verifySession, async (req, res) => {
 });
 
 // route to get all capsules for the logged-in user
-router.get('/', verifySession, async (req, res) => {
+router.get('/', authenticateToken, async (req, res) => {
   try {
-    const userId = req.session.user._id;
+    const userId = req.user._id;
     console.log("User ID from session:", userId);
 
     const userCapsules = await Capsule.find({ user: userId });
@@ -91,7 +92,7 @@ router.get('/', verifySession, async (req, res) => {
 });
 
 // route to get a single capsule by ID
-router.get('/:id', verifySession, async (req, res) => {
+router.get('/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
   // const { password } = req.query;
 
@@ -122,14 +123,14 @@ router.get('/:id', verifySession, async (req, res) => {
 
 //route to delete capsule
 
-router.delete('/:id', verifySession, async(req, res) => {
+router.delete('/:id', authenticateToken, async(req, res) => {
   const { id } = req.params;
 
   if(!ObjectId.isValid(id)) {
     return res.status(400).json({ message: 'Invalid capsule '});
   }
   try {
-    const capsule = await Capsule.findOneAndDelete({ _id: id, user: req.session.user._id });
+    const capsule = await Capsule.findOneAndDelete({ _id: id, user: req.user._id });
 
     if(!capsule) {
       return res.status(404).json({ message: 'Capsule not found or not authorized to delete '});
@@ -172,20 +173,32 @@ router.get('/share/:id', async (req, res) => {
 
 
 // route to update capsule
-router.put('/capsules/:id', async (req, res) => {
+router.put('/:id', authenticateToken, async (req, res) => {
   try {
-      const { id } = req.params;
-      const updatedCapsule = await Capsule.findByIdAndUpdate(id, req.body, { new: true });
+    const { id } = req.params;
+    const userId = req.user._id; // Get the logged-in user ID
+    const updateData = req.body; // Get update fields from request body
 
-      if (!updatedCapsule) {
-          return res.status(404).json({ message: 'Capsule not found' });
-      }
+    if (!ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid capsule ID' });
+    }
 
+    const updatedCapsule = await Capsule.findOneAndUpdate(
+      { _id: id, user: userId }, // Find capsule belonging to user
+      updateData, // Update with new data
+      { new: true } // Return updated document
+    );
 
-      res.json(updatedCapsule);
+    if (!updatedCapsule) {
+      return res.status(404).json({ message: 'Capsule not found or unauthorized' });
+    }
+
+    res.status(200).json(updatedCapsule);
   } catch (error) {
-      res.status(500).json({ message: 'Error updating capsule', error });
+    console.error('Error updating capsule:', error);
+    res.status(500).json({ message: 'Error updating capsule', error: error.message });
   }
 });
+
 
 module.exports = router;
