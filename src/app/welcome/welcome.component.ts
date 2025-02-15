@@ -204,7 +204,11 @@ export class WelcomeComponent implements OnInit {
     }).subscribe(
       (response: any) => {
         console.log("Response from server:", response);
-        this.imageUrls = [...this.imageUrls, ...response.imageUrls];
+        if (response.imageUrls && response.imageUrls.length > 0) {
+          this.imageUrls = [...this.imageUrls, ...response.imageUrls];
+        } else {
+          console.error("No image URLs received from server");
+        }
       },
       (error) => {
         console.error('Image uploading failed ', error);

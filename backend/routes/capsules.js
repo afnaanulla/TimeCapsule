@@ -32,10 +32,16 @@ router.post('/upload', authenticateToken, upload.array("images", 5), (req, res) 
     return res.status(400).json({ error: "No files uploaded" });
   }
 
-  const imageUrls = req.files.map((file) => `${req.protocol}://${req.get('host')}/uploads/${file.filename}`);
+  // Ensure correct URL format
+  const imageUrls = req.files.map((file) => {
+    return `${req.protocol}://${req.get('host')}/uploads/${file.filename}`;
+  });
+
+  console.log("Uploaded Image URLs:", imageUrls); // Debugging
 
   res.json({ imageUrls });
 });
+
 
 
 // route to create a new capsule
