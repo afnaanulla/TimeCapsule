@@ -12,7 +12,7 @@ const capsuleRoutes = require('./routes/capsules');
 const app = express();
 
 const corsOptions = {
-  origin: ["http://localhost:4200", "https://time-capsule-bqzle3h3d-afnaans-projects.vercel.app"],
+  origin: ["http://localhost:4200", "https://time-capsule-h4zyomyvi-afnaans-projects.vercel.app"],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
