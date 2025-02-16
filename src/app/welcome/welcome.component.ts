@@ -405,6 +405,7 @@ export class WelcomeComponent implements OnInit {
         withCredentials: true,
       }).subscribe(
         (response: any) => {
+          console.log('Delete Success:', response);
           this.snackBar.open('Capsule deleted', 'Close', {
             duration: 3000,
             verticalPosition: 'top',
@@ -414,8 +415,8 @@ export class WelcomeComponent implements OnInit {
           this.getCapsule();
         },
         (error) => {
-          //alert('Failed to delete capsule ' + error.error.message);
-          this.snackBar.open('Failed to delete capsule', 'Close', {
+          console.error('Delete Error:', error);
+          this.snackBar.open(`Failed to delete capsule: ${error.error.message}`, 'Close', {
             duration: 3000,
             verticalPosition: 'top',
             horizontalPosition: 'left',
