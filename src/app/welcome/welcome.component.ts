@@ -400,7 +400,7 @@ export class WelcomeComponent implements OnInit {
   deleteCapsule(capsuleId: string): void {
     if(confirm('Are you sure you want to delete this capsule ')) {
       const token = localStorage.getItem('jwtToken');
-      this.http.delete(`https://time-capsule-rvol.onrender.com/capsules/${capsuleId}`, {
+      this.http.delete(`https://time-capsule-rvol.onrender.com/api/capsules/${capsuleId}`, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       }).subscribe(
