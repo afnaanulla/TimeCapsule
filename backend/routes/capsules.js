@@ -142,7 +142,7 @@ router.delete('/:id', authenticateToken, async(req, res) => {
 router.get('/share/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    console.log('Requested id ', id);
+    // console.log('Requested id ', id);
     const capsule = await Capsule.findOne({ sharableLink: id });
 
 
