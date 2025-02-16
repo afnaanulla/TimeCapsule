@@ -12,7 +12,7 @@ const capsuleRoutes = require('./routes/capsules');
 const app = express();
 
 const corsOptions = {
-  origin: ["http://localhost:4200", "https://time-capsule-h4zyomyvi-afnaans-projects.vercel.app"],
+  origin: "http://localhost:4200",
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
@@ -21,11 +21,9 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/uploads", express.static(path.join(__dirname,'uploads')));
-
-
 app.use(express.static("public")); // Ensure "public" folder exists and has a favicon.ico
 
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 app.use('/auth', authRoutes);
 app.use('/api/capsules', capsuleRoutes);

@@ -198,17 +198,12 @@ export class WelcomeComponent implements OnInit {
 
     const token = localStorage.getItem('jwtToken');
 
-    this.http.post('https://time-capsule-pas3.onrender.com/api/capsules/upload', formData, {
+    this.http.post('http://localhost:2004/api/capsules/upload', formData, {
       headers: { Authorization: `Bearer ${token}` },
       withCredentials: true,
     }).subscribe(
       (response: any) => {
-        console.log("Response from server:", response);
-        if (response.imageUrls && response.imageUrls.length > 0) {
-          this.imageUrls = [...this.imageUrls, ...response.imageUrls];
-        } else {
-          console.error("No image URLs received from server");
-        }
+        this.imageUrls = [...this.imageUrls, ...response.imageUrls];
       },
       (error) => {
         console.error('Image uploading failed ', error);
@@ -241,7 +236,7 @@ export class WelcomeComponent implements OnInit {
       };
       const token = localStorage.getItem('jwtToken');
 
-      this.http.post('https://time-capsule-pas3.onrender.com/api/capsules/create', formData, {
+      this.http.post('http://localhost:2004/api/capsules/create', formData, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       }).subscribe(
@@ -282,7 +277,7 @@ export class WelcomeComponent implements OnInit {
 
   getCapsule(): void {
     const token = localStorage.getItem('jwtToken');
-    this.http.get('https://time-capsule-pas3.onrender.com/api/capsules', {
+    this.http.get('http://localhost:2004/api/capsules', {
       headers: { Authorization: `Bearer ${token}` },
       withCredentials: true,
     }).subscribe(
@@ -339,7 +334,7 @@ export class WelcomeComponent implements OnInit {
 
     const token = localStorage.getItem('jwtToken');
     // generating  shareable link from the backend
-    this.http.post(`https://time-capsule-pas3.onrender.com/api/capsules/share/${capsule._id}`, {}, {
+    this.http.post(`http://localhost:2004/api/capsules/share/${capsule._id}`, {}, {
       headers: { Authorization: `Bearer ${token}` },
       withCredentials: true
     }).subscribe(
@@ -405,7 +400,7 @@ export class WelcomeComponent implements OnInit {
   deleteCapsule(capsuleId: string): void {
     if(confirm('Are you sure you want to delete this capsule ')) {
       const token = localStorage.getItem('jwtToken');
-      this.http.delete(`https://time-capsule-pas3.onrender.com/api/capsules/${capsuleId}`, {
+      this.http.delete(`http://localhost:2004/api/capsules/${capsuleId}`, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       }).subscribe(
@@ -447,7 +442,7 @@ export class WelcomeComponent implements OnInit {
 
 
   logout() {
-    this.http.post('https://time-capsule-pas3.onrender.com/auth/logout', {},{
+    this.http.post('http://localhost:2004/auth/logout', {},{
       withCredentials: true
   }).subscribe(
       (response) => {

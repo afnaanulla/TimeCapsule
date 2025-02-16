@@ -6,17 +6,13 @@ const { ObjectId } = require('mongoose').Types;
 const Capsule = require('../models/capsule');
 const { v4: uuidv4 } = require('uuid');
 const { authenticateToken } = require('../routes/auth');
-const fs = require('fs');
-const uploadDir = 'uploads/';
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
+
 
 // const sharableLink = `${req.protocol}://${req.get('host')}/api/capsules/share/${uuidv4()}`;
 
 const storage = multer.diskStorage({
   destination: (req,file, cb) => {
-    cb(null, "uploads/");
+    cb(null, 'uploads/');
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname));
