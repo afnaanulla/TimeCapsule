@@ -27,19 +27,13 @@ const upload = multer({ storage: storage });
 
 //route to upload images
 
-router.post('/upload', authenticateToken, upload.array("images", 5), (req, res) => {
-  if (!req.files || req.files.length === 0) {
-    return res.status(400).json({ error: "No files uploaded" });
+router.post('/upload', upload.array("images", 5), (req, res) => {
+  if (req.files.length > 0) {
+    const imageUrls = req.files.map((file) => `/uploads/${file.filename}`);
+    res.json({ imageUrls });
+  } else {
+    res.status(400).send("No files uploaded");
   }
-
-  // Ensure correct URL format
-  const imageUrls = req.files.map((file) => {
-    return `${req.protocol}://${req.get('host')}/uploads/${file.filename}`;
-  });
-
-  console.log("Uploaded Image URLs:", imageUrls); // Debugging
-
-  res.json({ imageUrls });
 });
 
 
