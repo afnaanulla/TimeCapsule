@@ -6,13 +6,14 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const MongoStore = require('connect-mongo');
 
-const { router: authRoutes, authenticateToken } = require('./routes/auth'); // ✅ Fix import
+
+const { router: authRoutes, authenticateToken } = require('./routes/auth'); 
 const capsuleRoutes = require('./routes/capsules');
 
 const app = express();
 
 const corsOptions = {
-  origin: ["http://localhost:4200", "https://time-capsule-7vkt0rt3j-afnaans-projects.vercel.app"],
+  origin: ["http://localhost:4200"],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,

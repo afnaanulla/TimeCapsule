@@ -25,6 +25,7 @@ const capsuleSchema = new mongoose.Schema({
   },
   images: {
     type: [String],
+    ref:'uploads',
     default: [],
   },
   isOneTimeView: {

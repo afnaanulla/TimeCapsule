@@ -1,37 +1,56 @@
 const express = require('express');
-const multer = require('multer');
 const path = require('path');
 const router = express.Router();
 const { ObjectId } = require('mongoose').Types;
 const Capsule = require('../models/capsule');
 const { v4: uuidv4 } = require('uuid');
 const { authenticateToken } = require('../routes/auth');
+const multer = require('multer');
+const { GridFsStorage } = require('multer-gridfs-storage');
+const mongoose = require('mongoose');
+const Grid = require('gridfs-stream');
+const fs = require('fs');
+  const { v2: cloudinary } = require('cloudinary'); // ✅ Import Cloudinary
+  const { CloudinaryStorage } = require('multer-storage-cloudinary');
+  require('dotenv').config();
 
 
-// const sharableLink = `${req.protocol}://${req.get('host')}/api/capsules/share/${uuidv4()}`;
+  cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.CLOUD_API_KEY,
+    api_secret: process.env.CLOUD_API_SECRET
+  });
 
-const storage = multer.diskStorage({
-  destination: (req,file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
+  const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'time_capsule', // Change this to your folder name
+        format: async (req, file) => 'jpg', // Convert all images to JPG
+        public_id: (req, file) => file.originalname.split('.')[0] // Keep original name
+    }
+  });
+
+  // Debugging middleware
+  const upload = multer({ storage });
+
+  // ✅ Upload Route
+  router.post('/upload', upload.array('images', 5), async (req, res) => {
+    try {
+        if (!req.files || req.files.length === 0) {
+            return res.status(400).json({ error: 'No files uploaded' });
+        }
+
+        const uploadedImages = req.files.map(file => ({
+            url: file.path // Cloudinary provides direct URL
+        }));
+
+        return res.json({ images: uploadedImages });
+
+    } catch (error) {
+        console.error('Cloudinary Upload Error:', error);
+        return res.status(500).json({ error: 'Image upload failed' });
+    }
 });
-
-const upload = multer({ storage: storage });
-
-//route to upload images
-
-router.post('/upload', upload.array("images", 5), (req, res) => {
-  if (req.files.length > 0) {
-    const imageUrls = req.files.map((file) => `/uploads/${file.filename}`);
-    res.json({ imageUrls });
-  } else {
-    res.status(400).send("No files uploaded");
-  }
-});
-
 
 
 // route to create a new capsule
@@ -53,7 +72,7 @@ router.post('/create', authenticateToken, async (req, res) => {
       description,
       unlockDate,
       content,
-      images: imageArray,
+      images,
       user: userId,
       isOneTimeView,
       sharableLink: sharableId,

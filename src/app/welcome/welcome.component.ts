@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HttpEventType } from '@angular/common/http';
 
 
 import { MatCardModule } from '@angular/material/card';
@@ -191,52 +192,90 @@ export class WelcomeComponent implements OnInit {
   }
 
 
-
-  uploadImages(files: any[]): void {
-    const formData = new FormData();
-    files.forEach((file) => formData.append('images', file));
-
-    const token = localStorage.getItem('jwtToken');
-
-    this.http.post('https://time-capsule-rvol.onrender.com/api/capsules/upload', formData, {
-      headers: { Authorization: `Bearer ${token}` },
-      withCredentials: true,
-    }).subscribe(
-      (response: any) => {
-        this.imageUrls = [...this.imageUrls, ...response.imageUrls];
-      },
-      (error) => {
-        console.error('Image uploading failed ', error);
-        this.snackBar.open('Image uploading failed', 'Close', {
-          duration: 3000,
-          verticalPosition: 'top',
-          horizontalPosition: 'left',
-          panelClass: ['snackbar-warning']
+  uploadImages(files: File[]): void {
+    if (!files || files.length === 0) {
+        this.snackBar.open('No files selected', 'Close', {
+            duration: 3000,
+            verticalPosition: 'top'
         });
-      }
-    );
-  }
+        return;
+    }
 
-  goToCapsuleForm() {
-    this.router.navigate(['/capsule-form']);
-  }
+    // Check file sizes
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    for (const file of files) {
+        if (file.size > maxSize) {
+            this.snackBar.open(`File ${file.name} is too large (max 5MB)`, 'Close', {
+                duration: 3000,
+                verticalPosition: 'top'
+            });
+            return;
+        }
+    }
+
+    const formData = new FormData();
+    files.forEach(file => {
+        console.log('Appending file:', file.name, file.size);
+        formData.append('images', file);
+    });
+
+    this.http.post<{ images: { url: string }[] }>(
+        'http://localhost:2004/api/capsules/upload', 
+        formData, 
+        {
+            reportProgress: true,
+            observe: 'events'
+        }
+    ).subscribe({
+        next: (event: any) => {
+            if (event.type === HttpEventType.UploadProgress) {
+                const progress = Math.round(100 * event.loaded / event.total);
+                console.log(`Upload progress: ${progress}%`);
+            } else if (event.type === HttpEventType.Response) {
+                console.log('Upload complete:', event.body);
+                if (event.body?.images) {
+                    this.imageUrls = [...this.imageUrls, ...event.body.images.map((img: { url: string }) => img.url)];
+
+                    this.snackBar.open('Files uploaded successfully', 'Close', {
+                        duration: 3000,
+                        verticalPosition: 'top'
+                    });
+                }
+            }
+        },
+        error: (error) => {
+            console.error('Upload error:', error);
+            this.snackBar.open(
+                error.error?.error || 'Failed to upload files', 
+                'Close', 
+                {
+                    duration: 5000,
+                    verticalPosition: 'top'
+                }
+            );
+        }
+    });
+}
 
 
-  createCapsule(): void {
-    if (this.capsuleForm.valid) {
-      const formData: any = {
-        title: this.capsuleForm.value.title,
-        description: this.capsuleForm.value.content,
-        unlockDate: this.capsuleForm.value.unlockDate,
-        content: this.capsuleForm.value.content,
-        type: this.capsuleForm.value.type,
-        password: this.capsuleForm.value.type === 'private' ? this.capsuleForm.value.password : '',
-        images: this.imageUrls,
-        // oneTimeView: this.capsuleForm.value.oneTimeView,
-      };
+
+
+
+createCapsule(): void {
+  if (this.capsuleForm.valid) {
+    const formData: any = {
+      title: this.capsuleForm.value.title,
+      description: this.capsuleForm.value.content,
+      unlockDate: this.capsuleForm.value.unlockDate,
+      content: this.capsuleForm.value.content,
+      type: this.capsuleForm.value.type,
+      password: this.capsuleForm.value.type === 'private' ? this.capsuleForm.value.password : '',
+      images: this.imageUrls,
+      // oneTimeView: this.capsuleForm.value.oneTimeView,
+    };
       const token = localStorage.getItem('jwtToken');
 
-      this.http.post('https://time-capsule-rvol.onrender.com/api/capsules/create', formData, {
+      this.http.post('http://localhost:2004/api/capsules/create', formData, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       }).subscribe(
@@ -272,12 +311,16 @@ export class WelcomeComponent implements OnInit {
       });
     }
   }
-    // upload image and get its URL
-
-
+  // upload image and get its URL
+  
+    goToCapsuleForm() {
+      this.router.navigate(['/capsule-form']);
+    }
+  
+  
   getCapsule(): void {
     const token = localStorage.getItem('jwtToken');
-    this.http.get('https://time-capsule-rvol.onrender.com/api/capsules', {
+    this.http.get('http://localhost:2004/api/capsules', {
       headers: { Authorization: `Bearer ${token}` },
       withCredentials: true,
     }).subscribe(
@@ -310,21 +353,12 @@ export class WelcomeComponent implements OnInit {
 
   // no use of it
   viewCapsule(capsule: any): void {
-    if (capsule.type === 'private' && !capsule.unlocked) {
-      const enteredPassword = prompt('This capsule is private. Enter the password:');
-      if (enteredPassword !== capsule.password) {
-        alert('Incorrect password! Try again.');
-        return;
-      }
-      capsule.unlocked = true; // Unlock the capsule after correct password
-    }
-
-
-    // console.log("Viewing capsule:", capsule); // Debugging log
-    // console.log("Images:", capsule.images);
-    this.selectedCapsule = capsule;
+    this.selectedCapsule = {
+      ...capsule,
+      images: capsule.images?.map((img: any) => (typeof img === 'string' ? { url: img } : img)) || []
+    };
   }
-
+  
   shareCapsule(capsule: any): void {
     if (capsule.sharableLink) {
       const frontendLink = `${window.location.origin}/shared/${capsule.sharableLink}`;
@@ -334,7 +368,7 @@ export class WelcomeComponent implements OnInit {
 
     const token = localStorage.getItem('jwtToken');
     // generating  shareable link from the backend
-    this.http.post(`https://time-capsule-rvol.onrender.com/api/capsules/share/${capsule._id}`, {}, {
+    this.http.post(`http://localhost:2004/api/capsules/share/${capsule._id}`, {}, {
       headers: { Authorization: `Bearer ${token}` },
       withCredentials: true
     }).subscribe(
@@ -400,7 +434,7 @@ export class WelcomeComponent implements OnInit {
   deleteCapsule(capsuleId: string): void {
     if(confirm('Are you sure you want to delete this capsule ')) {
       const token = localStorage.getItem('jwtToken');
-      this.http.delete(`https://time-capsule-rvol.onrender.com/api/capsules/${capsuleId}`, {
+      this.http.delete(`http://localhost:2004/api/capsules/${capsuleId}`, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       }).subscribe(
@@ -443,7 +477,7 @@ export class WelcomeComponent implements OnInit {
 
 
   logout() {
-    this.http.post('https://time-capsule-rvol.onrender.com/auth/logout', {},{
+    this.http.post('http://localhost:2004/auth/logout', {},{
       withCredentials: true
   }).subscribe(
       (response) => {

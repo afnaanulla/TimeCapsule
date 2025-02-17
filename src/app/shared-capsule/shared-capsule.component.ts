@@ -21,7 +21,7 @@ export class SharedCapsuleComponent implements OnInit {
     console.log('Shared Capsule ID:', this.capsuleId);
 
     if (this.capsuleId) {
-      fetch(`https://time-capsule-rvol.onrender.com/api/capsules/share/${this.capsuleId}`, {
+      fetch(`http://localhost:2004/api/capsules/share/${this.capsuleId}`, {
         credentials: 'include'
       })
         .then(response => {
@@ -33,6 +33,12 @@ export class SharedCapsuleComponent implements OnInit {
         .then(data => {
           console.log('Fetched Capsule:', data);
           this.capsule = data;
+
+            // Ensure images are in correct format
+    this.capsule = {
+      ...data,
+      images: data.images?.map((img: any) => (typeof img === 'string' ? { url: img } : img)) || []
+    };
         })
         .catch(error => {
           console.error('Error fetching capsule:', error);

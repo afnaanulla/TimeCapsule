@@ -114,19 +114,11 @@
             <h2 style="color: red;">{{ selectedCapsule.title }}</h2>
             <p style="color: rgb(32, 27, 27);"> {{ selectedCapsule.content }}</p>
 
-            <!-- display uploaded images -->
-            <div *ngIf="imageUrls.length > 0">
-              <h3>Newly Uploaded Images:</h3>
-              <div class="image-gallery">
-                <img *ngFor="let img of imageUrls" [src]="img" class="capsule-image" alt="Uploaded Image" width="150" height="100">
-              </div>
-            </div>
-
-            <!-- display capsule images (if exist) -->
+            <!-- Display uploaded images -->
             <div *ngIf="selectedCapsule.images && selectedCapsule.images.length > 0">
-              <h3 style="color: blue;">Attached Images:</h3>
+              <h3>Attached Images:</h3>
               <div class="image-gallery">
-                <img *ngFor="let img of selectedCapsule.images" [src]="'https://time-capsule-rvol.onrender.com' + img" class="capsule-image" alt="Capsule Image">
+                <img *ngFor="let img of selectedCapsule.images" [src]="img.url" class="capsule-image" width="200" height="200">
               </div>
             </div>
 
@@ -134,7 +126,7 @@
           </div>
         </div>
 
-        <!-- create capsule section -->
+        <!-- Create capsule section -->
         <div *ngIf="currentSection === 'create'">
           <mat-card class="create-capsule-card">
             <mat-card-header>
@@ -160,15 +152,17 @@
                   <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
 
-                <!-- image section -->
-                  <mat-label>Upload Image Drag your items here </mat-label>
-                  <input type="file" (change)="onImageChange($event)" accept="image/*">
+                <!-- Image Upload Section -->
+                <mat-label>Upload Image Drag your items here </mat-label>
+                <input type="file" (change)="onImageChange($event)" accept="image/*" multiple>
 
-
-                <div *ngIf="imagePreviewurl">
-                  <h4>Preview: you can add maximum 5</h4>
-                  <img [src]="imagePreviewurl" alt="image preview" style="max-width: 200px; max-height:200px"/>
+                <div *ngIf="imageUrls.length > 0">
+                  <h4>Preview: you can add a maximum of 5</h4>
+                  <div *ngFor="let url of imageUrls">
+                    <img [src]="url" alt="image preview" style="max-width: 200px; max-height: 200px"/>
+                  </div>
                 </div>
+
                 <button mat-raised-button color="primary" type="submit" [disabled]="capsuleForm.invalid">Create Capsule</button>
               </form>
             </mat-card-content>
