@@ -10,10 +10,10 @@ const { GridFsStorage } = require('multer-gridfs-storage');
 const mongoose = require('mongoose');
 const Grid = require('gridfs-stream');
 const fs = require('fs');
-  const { v2: cloudinary } = require('cloudinary'); // ✅ Import Cloudinary
-  const { CloudinaryStorage } = require('multer-storage-cloudinary');
-  require('dotenv').config();
+const { v2: cloudinary } = require('cloudinary');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
+require('dotenv').config();
 
   cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -25,24 +25,25 @@ const fs = require('fs');
   const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
-        folder: 'time_capsule', // Change this to your folder name
-        format: async (req, file) => 'jpg', // Convert all images to JPG
-        public_id: (req, file) => file.originalname.split('.')[0] // Keep original name
+      folder: 'time_capsule', // Change this to your folder name
+      format: async (req, file) => 'jpg', // Convert all images to JPG
+      public_id: (req, file) => file.originalname.split('.')[0] // Keep original name
     }
   });
 
   // Debugging middleware
   const upload = multer({ storage });
 
-  // ✅ Upload Route
   router.post('/upload', upload.array('images', 5), async (req, res) => {
     try {
+
+      console.log("Request received for upload:", req.files);
         if (!req.files || req.files.length === 0) {
             return res.status(400).json({ error: 'No files uploaded' });
         }
 
         const uploadedImages = req.files.map(file => ({
-            url: file.path // Cloudinary provides direct URL
+            url: file.path
         }));
 
         return res.json({ images: uploadedImages });

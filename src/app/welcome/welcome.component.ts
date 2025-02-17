@@ -214,15 +214,19 @@ export class WelcomeComponent implements OnInit {
     }
 
     const formData = new FormData();
-    files.forEach(file => {
-        console.log('Appending file:', file.name, file.size);
+    for (const file of files) {
+        console.log(`Uploading: ${file.name}, Size: ${file.size}`);
         formData.append('images', file);
-    });
+    }
+
 
     this.http.post<{ images: { url: string }[] }>(
         'https://time-capsule-rvol.onrender.com/api/capsules/upload',
         formData,
         {
+          headers: {
+            'enctype': 'multipart/form-data'
+          },
             reportProgress: true,
             observe: 'events'
         }
