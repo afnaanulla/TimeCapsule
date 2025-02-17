@@ -220,8 +220,8 @@ export class WelcomeComponent implements OnInit {
     });
 
     this.http.post<{ images: { url: string }[] }>(
-        'http://localhost:2004/api/capsules/upload', 
-        formData, 
+        'https://time-capsule-rvol.onrender.com/api/capsules/upload',
+        formData,
         {
             reportProgress: true,
             observe: 'events'
@@ -246,8 +246,8 @@ export class WelcomeComponent implements OnInit {
         error: (error) => {
             console.error('Upload error:', error);
             this.snackBar.open(
-                error.error?.error || 'Failed to upload files', 
-                'Close', 
+                error.error?.error || 'Failed to upload files',
+                'Close',
                 {
                     duration: 5000,
                     verticalPosition: 'top'
@@ -275,7 +275,7 @@ createCapsule(): void {
     };
       const token = localStorage.getItem('jwtToken');
 
-      this.http.post('http://localhost:2004/api/capsules/create', formData, {
+      this.http.post('https://time-capsule-rvol.onrender.com/api/capsules/create', formData, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       }).subscribe(
@@ -312,15 +312,15 @@ createCapsule(): void {
     }
   }
   // upload image and get its URL
-  
+
     goToCapsuleForm() {
       this.router.navigate(['/capsule-form']);
     }
-  
-  
+
+
   getCapsule(): void {
     const token = localStorage.getItem('jwtToken');
-    this.http.get('http://localhost:2004/api/capsules', {
+    this.http.get('https://time-capsule-rvol.onrender.com/api/capsules', {
       headers: { Authorization: `Bearer ${token}` },
       withCredentials: true,
     }).subscribe(
@@ -358,7 +358,7 @@ createCapsule(): void {
       images: capsule.images?.map((img: any) => (typeof img === 'string' ? { url: img } : img)) || []
     };
   }
-  
+
   shareCapsule(capsule: any): void {
     if (capsule.sharableLink) {
       const frontendLink = `${window.location.origin}/shared/${capsule.sharableLink}`;
@@ -368,7 +368,7 @@ createCapsule(): void {
 
     const token = localStorage.getItem('jwtToken');
     // generating  shareable link from the backend
-    this.http.post(`http://localhost:2004/api/capsules/share/${capsule._id}`, {}, {
+    this.http.post(`https://time-capsule-rvol.onrender.com/api/capsules/share/${capsule._id}`, {}, {
       headers: { Authorization: `Bearer ${token}` },
       withCredentials: true
     }).subscribe(
@@ -434,7 +434,7 @@ createCapsule(): void {
   deleteCapsule(capsuleId: string): void {
     if(confirm('Are you sure you want to delete this capsule ')) {
       const token = localStorage.getItem('jwtToken');
-      this.http.delete(`http://localhost:2004/api/capsules/${capsuleId}`, {
+      this.http.delete(`https://time-capsule-rvol.onrender.com/api/capsules/${capsuleId}`, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       }).subscribe(
@@ -477,7 +477,7 @@ createCapsule(): void {
 
 
   logout() {
-    this.http.post('http://localhost:2004/auth/logout', {},{
+    this.http.post('https://time-capsule-rvol.onrender.com/auth/logout', {},{
       withCredentials: true
   }).subscribe(
       (response) => {

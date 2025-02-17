@@ -7,13 +7,13 @@ const bodyParser = require('body-parser');
 const MongoStore = require('connect-mongo');
 
 
-const { router: authRoutes, authenticateToken } = require('./routes/auth'); 
+const { router: authRoutes, authenticateToken } = require('./routes/auth');
 const capsuleRoutes = require('./routes/capsules');
 
 const app = express();
 
 const corsOptions = {
-  origin: ["http://localhost:4200"],
+  origin: ["http://localhost:4200", "https://time-capsule-orpin.vercel.app"],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
