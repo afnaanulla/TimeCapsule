@@ -15,7 +15,7 @@ const app = express();
 const corsOptions = {
   origin: ["http://localhost:4200", "https://time-capsule-orpin.vercel.app"],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'enctype'],
   credentials: true,
 };
 
