@@ -201,8 +201,8 @@ export class WelcomeComponent implements OnInit {
         return;
     }
 
-    // Check file sizes
-    const maxSize = 5 * 1024 * 1024; // 5MB
+    // checking file sizes
+    const maxSize = 5 * 1024 * 1024; // 5mb
     for (const file of files) {
         if (file.size > maxSize) {
             this.snackBar.open(`File ${file.name} is too large (max 5MB)`, 'Close', {
@@ -222,7 +222,7 @@ export class WelcomeComponent implements OnInit {
     const token = localStorage.getItem('jwtToken');
 
     this.http.post<{ images: { url: string }[] }>(
-        'http://localhost:2004/api/capsules/upload',
+        'https://timecapsule-l8mr.onrender.com/api/capsules/upload',
         formData,
         {
             reportProgress: true,
@@ -278,7 +278,7 @@ createCapsule(): void {
     };
       const token = localStorage.getItem('jwtToken');
 
-      this.http.post('http://localhost:2004/api/capsules/create', formData, {
+      this.http.post('https://timecapsule-l8mr.onrender.com/api/capsules/create', formData, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       }).subscribe(
@@ -323,7 +323,7 @@ goToCapsuleForm() {
 
   getCapsule(): void {
     const token = localStorage.getItem('jwtToken');
-    this.http.get('http://localhost:2004/api/capsules', {
+    this.http.get('https://timecapsule-l8mr.onrender.com/api/capsules', {
       headers: { Authorization: `Bearer ${token}` },
       withCredentials: true,
     }).subscribe(
@@ -347,7 +347,7 @@ goToCapsuleForm() {
   }
 
   onSearch(event: any): void {
-    const query = event.target.value.toLowerCase();  // Get the search query
+    const query = event.target.value.toLowerCase();  // get the search query
     this.filteredCapsules = this.capsules.filter(capsule =>
       capsule.title.toLowerCase().includes(query) || capsule.content.toLowerCase().includes(query) // Filter based on title
     );
@@ -370,8 +370,9 @@ goToCapsuleForm() {
     }
 
     const token = localStorage.getItem('jwtToken');
+    
     // generating  shareable link from the backend
-    this.http.post(`http://localhost:2004/api/capsules/share/${capsule._id}`, {}, {
+    this.http.post(`https://timecapsule-l8mr.onrender.com/api/capsules/share/${capsule._id}`, {}, {
       headers: { Authorization: `Bearer ${token}` },
       withCredentials: true
     }).subscribe(
@@ -437,7 +438,7 @@ goToCapsuleForm() {
   deleteCapsule(capsuleId: string): void {
     if(confirm('Are you sure you want to delete this capsule ')) {
       const token = localStorage.getItem('jwtToken');
-      this.http.delete(`http://localhost:2004/api/capsules/${capsuleId}`, {
+      this.http.delete(`https://timecapsule-l8mr.onrender.com/api/capsules/${capsuleId}`, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       }).subscribe(
@@ -480,7 +481,7 @@ goToCapsuleForm() {
 
 
   logout() {
-    this.http.post('http://localhost:2004/auth/logout', {},{
+    this.http.post('https://timecapsule-l8mr.onrender.com/auth/logout', {},{
       withCredentials: true
   }).subscribe(
       (response) => {

@@ -21,7 +21,7 @@ export class SharedCapsuleComponent implements OnInit {
     console.log('Shared Capsule ID:', this.capsuleId);
 
     if (this.capsuleId) {
-      fetch(`http://localhost:2004/api/capsules/share/${this.capsuleId}`, {
+      fetch(`https://timecapsule-l8mr.onrender.com/api/capsules/share/${this.capsuleId}`, {
         credentials: 'include'
       })
         .then(response => {
@@ -34,7 +34,7 @@ export class SharedCapsuleComponent implements OnInit {
           console.log('Fetched Capsule:', data);
           this.capsule = data;
 
-            // Ensure images are in correct format
+            // ensuring images are in correct format or not
     this.capsule = {
       ...data,
       images: data.images?.map((img: any) => (typeof img === 'string' ? { url: img } : img)) || []

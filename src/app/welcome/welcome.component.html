@@ -151,13 +151,14 @@
                   <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                   <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
+                <p style="color: black;">Wait for few seconds after uploading image</p>
 
                 <!-- Image Upload Section -->
-                <mat-label>Upload Image Drag your items here </mat-label>
+                <mat-label style="color: blue;">Upload Image or Drag your images here ↓ in the rectangle box</mat-label>
                 <input type="file" (change)="onImageChange($event)" accept="image/*" multiple>
 
                 <div *ngIf="imageUrls.length > 0">
-                  <h4>Preview: you can add a maximum of 5</h4>
+                  <h4 style="color: rgb(78, 155, 78);">Preview: you can add a maximum of 5</h4>
                   <div *ngFor="let url of imageUrls">
                     <img [src]="url" alt="image preview" style="max-width: 200px; max-height: 200px"/>
                   </div>
