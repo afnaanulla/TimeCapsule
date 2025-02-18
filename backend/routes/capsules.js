@@ -216,4 +216,8 @@ router.put('/:id', authenticateToken, async (req, res) => {
 });
 
 
+console.log('Cloudinary API Key:', process.env.CLOUDINARY_API_KEY);
+console.log('Cloudinary API Secret:', process.env.CLOUDINARY_API_SECRET);
+
+
 module.exports = router;

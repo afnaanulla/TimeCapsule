@@ -13,7 +13,7 @@ const capsuleRoutes = require('./routes/capsules');
 const app = express();
 
 const corsOptions = {
-  origin: ["http://localhost:4200", "https://time-capsule-orpin.vercel.app"],
+  origin: "http://localhost:4200",
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization', 'enctype'],
   credentials: true,
