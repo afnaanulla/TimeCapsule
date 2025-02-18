@@ -13,7 +13,7 @@ const capsuleRoutes = require('./routes/capsules');
 const app = express();
 
 const corsOptions = {
-  origin: "http://localhost:4200",
+  origin: ["http://localhost:4200", "https://time-capsule-gilt.vercel.app"],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization', 'enctype'],
   credentials: true,
@@ -22,7 +22,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public")); // Ensure "public" folder exists and has a favicon.ico
+app.use(express.static("public")); 
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
@@ -34,7 +34,6 @@ app.get('/', (req, res) => {
   res.send('Server is running...');
 });
 
-// Serve Angular app
 app.use(express.static(path.join(__dirname, 'dist', 'time-capsule')));
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'time-capsule', 'index.html'));
@@ -49,7 +48,6 @@ mongoose
 
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
 
-// Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something went wrong!');

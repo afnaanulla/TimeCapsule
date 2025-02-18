@@ -25,13 +25,12 @@ require('dotenv').config();
   const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
-      folder: 'time_capsule', // Change this to your folder name
-      format: async (req, file) => 'jpg', // Convert all images to JPG
-      public_id: (req, file) => file.originalname.split('.')[0] // Keep original name
+      folder: 'time_capsule', 
+      format: async (req, file) => 'jpg', 
+      public_id: (req, file) => file.originalname.split('.')[0] 
     }
   });
 
-  // Debugging middleware
   const upload = multer({ storage });
 
   router.post('/upload', upload.array('images', 5), async (req, res) => {
