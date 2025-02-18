@@ -7,7 +7,7 @@ Time Capsule is a web application that allows users to create, store, and share 
 ## 🚀 Features
 
 - ✅ **User Authentication** (JWT-based Login & Signup )
-- ✅ **User Verification** (Node mailer gets code to your mail )
+- ✅ **User Verification** (Node mailer send code to your mail )
 - ✅ **Create, Edit & Delete Capsules**
 - ✅ **Image Upload** ( Cloudinary Integration )
 - ✅ **Set Future Unlock Date for Capsules**
